@@ -10,14 +10,14 @@
     <div class="container">
         <div class="header">
             <a href="index.html" class="back-btn">🏠 홈으로</a>
-            <h1>새로운 사기수법 제보 게시판</h1>
+            <h1>새로운 사기수법을 제보합니다</h1>
         </div>
 
         <div class="write-form">
             <form onsubmit="submitReport(event)">
                 <div class="form-row">
                     <input type="text" id="title" placeholder="제목을 입력하세요..." maxlength="100" required>
-                    <button type="submit" class="submit-btn">📝 제출하기</button>
+                    <button type="submit" class="submit-btn" id="submitBtn">📝 제출하기</button>
                 </div>
             </form>
         </div>
@@ -25,9 +25,8 @@
         <div id="successMessage" style="display: none;"></div>
 
         <div class="board-list">
-            
             <div id="boardList">
-                <!-- 게시글 목록이 여기에 표시됩니다 -->
+                <div class="loading">게시글을 불러오는 중...</div>
             </div>
 
             <div class="board-stats">
@@ -36,20 +35,49 @@
         </div>
     </div>
 
+    <!-- Supabase JavaScript SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
     <script>
-        let reports = [
-            { id: 23, title: "ㅇ", date: "25. 07. 05. 오후 02:40" },
-            { id: 22, title: "ㅇ", date: "25. 07. 05. 오후 02:40" },
-            { id: 21, title: "ㅇ", date: "25. 07. 05. 오후 02:40" },
-            { id: 20, title: "포포포", date: "25. 07. 05. 오후 02:40" },
-            { id: 19, title: "ㅌㅌ", date: "25. 07. 05. 오후 02:40" },
-            { id: 18, title: "ㅍ", date: "25. 07. 05. 오후 02:40" },
-            { id: 17, title: "ㅊ", date: "25. 07. 05. 오후 02:40" },
-            { id: 16, title: "", date: "25. 07. 05. 오후 02:40" }
-        ];
+        // Supabase 설정
+        const SUPABASE_URL = 'https://rmulijeebyohilnyqkev.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJtdWxpamVlYnlvaGlsbnlxa2V2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE3MTAwODMsImV4cCI6MjA2NzI4NjA4M30.Cf4mZutF14QVT7bfY1GJk6iBkKT8ALUA0uGkvLHKWDg';
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        function formatNumber(num) {
-            return String(num).padStart(6, '0');
+        let reports = [];
+
+        // 페이지 로드시 데이터 가져오기
+        async function loadReports() {
+            try {
+                console.log('데이터 로딩 시작...');
+                
+                const { data, error } = await supabase
+                    .from('reports')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+                
+                if (error) {
+                    console.error('Supabase 오류:', error);
+                    throw error;
+                }
+                
+                console.log('로드된 데이터:', data);
+                reports = data || [];
+                renderReports();
+                
+            } catch (error) {
+                console.error('데이터 로드 오류:', error);
+                
+                // 연결 실패시 알림 표시
+                const boardList = document.getElementById('boardList');
+                boardList.innerHTML = `
+                    <div style="text-align: center; color: #dc3545; padding: 20px; font-size: 11px;">
+                        데이터베이스 연결에 실패했습니다.<br>
+                        잠시 후 다시 시도해주세요.<br>
+                        <button onclick="loadReports()" style="margin-top: 10px; padding: 5px 10px; font-size: 10px;">다시 시도</button>
+                    </div>
+                `;
+            }
         }
 
         function getCurrentDateTime() {
@@ -65,10 +93,11 @@
             return `${year}. ${month}. ${day}. ${period} ${displayHours}:${minutes}`;
         }
 
-        function submitReport(event) {
+        async function submitReport(event) {
             event.preventDefault();
             
             const titleInput = document.getElementById('title');
+            const submitBtn = document.getElementById('submitBtn');
             const title = titleInput.value.trim();
             
             if (!title) {
@@ -76,27 +105,57 @@
                 return;
             }
 
-            // 새 게시글 추가
-            const newReport = {
-                id: Math.max(...reports.map(r => r.id)) + 1,
-                title: title,
-                date: getCurrentDateTime()
-            };
-            
-            reports.unshift(newReport);
-            renderReports();
-            
-            // 성공 메시지 표시
-            const successMsg = document.getElementById('successMessage');
-            successMsg.innerHTML = '<div class="success-message">제보가 성공적으로 등록되었습니다!</div>';
-            successMsg.style.display = 'block';
-            
-            setTimeout(() => {
-                successMsg.style.display = 'none';
-            }, 3000);
-            
-            // 폼 초기화
-            titleInput.value = '';
+            // 제출 버튼 비활성화
+            submitBtn.disabled = true;
+            submitBtn.textContent = '제출 중...';
+
+            try {
+                console.log('데이터 저장 시작:', title);
+                
+                // Supabase에 데이터 저장
+                const { data, error } = await supabase
+                    .from('reports')
+                    .insert([
+                        {
+                            title: title,
+                            date: getCurrentDateTime()
+                        }
+                    ])
+                    .select();
+
+                if (error) {
+                    console.error('저장 오류:', error);
+                    throw error;
+                }
+
+                console.log('저장 성공:', data);
+
+                // 성공시 로컬 배열에도 추가
+                if (data && data[0]) {
+                    reports.unshift(data[0]);
+                    renderReports();
+                }
+                
+                // 성공 메시지 표시
+                const successMsg = document.getElementById('successMessage');
+                successMsg.innerHTML = '<div class="success-message">제보가 성공적으로 등록되었습니다!</div>';
+                successMsg.style.display = 'block';
+                
+                setTimeout(() => {
+                    successMsg.style.display = 'none';
+                }, 3000);
+                
+                // 폼 초기화
+                titleInput.value = '';
+                
+            } catch (error) {
+                console.error('저장 오류:', error);
+                alert('저장 중 오류가 발생했습니다. 다시 시도해주세요.\n오류: ' + error.message);
+            } finally {
+                // 제출 버튼 다시 활성화
+                submitBtn.disabled = false;
+                submitBtn.textContent = '📝 제출하기';
+            }
         }
 
         function renderReports() {
@@ -120,8 +179,23 @@
 
         // 페이지 로드 시 초기화
         document.addEventListener('DOMContentLoaded', function() {
-            renderReports();
+            console.log('페이지 로드 완료, 데이터 로딩 시작');
+            loadReports();
         });
+
+        // 실시간 업데이트 (다른 사용자가 추가한 게시글 실시간 반영)
+        supabase
+            .channel('reports_channel')
+            .on('postgres_changes', 
+                { event: 'INSERT', schema: 'public', table: 'reports' }, 
+                (payload) => {
+                    console.log('새 게시글 실시간 수신:', payload.new);
+                    // 새 게시글을 맨 앞에 추가
+                    reports.unshift(payload.new);
+                    renderReports();
+                }
+            )
+            .subscribe();
     </script>
 </body>
 </html>
