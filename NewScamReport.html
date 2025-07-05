@@ -5,18 +5,137 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>새로운 사기수법을 제보합니다</title>
     <link rel="stylesheet" href="style.css">
+    <style>
+        /* 추가 스타일 */
+        .form-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+            align-items: center;
+        }
+        
+        .form-row input[type="text"], .form-row input[type="password"] {
+            padding: 5px 8px;
+            border: 1px solid #ccc;
+            font-size: 12px;
+            font-family: inherit;
+        }
+        
+        #title {
+            flex: 1;
+        }
+        
+        #password {
+            width: 100px;
+        }
+        
+        .board-actions {
+            display: flex;
+            gap: 5px;
+            margin-left: 10px;
+        }
+        
+        .action-btn {
+            background: #f5f5f5;
+            border: 1px solid #ccc;
+            color: #666;
+            padding: 2px 6px;
+            cursor: pointer;
+            font-size: 10px;
+            border-radius: 2px;
+        }
+        
+        .action-btn:hover {
+            background: #e8e8e8;
+        }
+        
+        .edit-btn {
+            color: #4a90e2;
+        }
+        
+        .delete-btn {
+            color: #dc3545;
+        }
+        
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        
+        .modal-content {
+            background: white;
+            padding: 20px;
+            border-radius: 5px;
+            width: 300px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+        
+        .modal-header {
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #333;
+        }
+        
+        .modal-body {
+            margin-bottom: 15px;
+        }
+        
+        .modal-footer {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+        }
+        
+        .modal-btn {
+            flex: 1;
+            padding: 8px 12px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 11px;
+        }
+        
+        .modal-btn.primary {
+            background: linear-gradient(to bottom, #4a90e2, #357abd);
+            color: white;
+            border-color: #2e5c87;
+        }
+        
+        .modal-btn.secondary {
+            background: linear-gradient(to bottom, #f5f5f5, #e8e8e8);
+            color: #333;
+        }
+        
+        .modal-input {
+            width: 100%;
+            padding: 6px;
+            border: 1px solid #ccc;
+            font-size: 12px;
+            margin-bottom: 10px;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
             <a href="index.html" class="back-btn">🏠 홈으로</a>
-            <h1>새로운 사기수법 제보 게시판</h1>
+            <h1>새로운 사기수법을 제보합니다</h1>
         </div>
 
         <div class="write-form">
             <form onsubmit="submitReport(event)">
                 <div class="form-row">
                     <input type="text" id="title" placeholder="제목을 입력하세요..." maxlength="100" required>
+                    <input type="password" id="password" placeholder="비밀번호" maxlength="20" required>
                     <button type="submit" class="submit-btn" id="submitBtn">📝 제출하기</button>
                 </div>
             </form>
@@ -35,6 +154,36 @@
         </div>
     </div>
 
+    <!-- 수정 모달 -->
+    <div class="modal" id="editModal">
+        <div class="modal-content">
+            <div class="modal-header">게시글 수정</div>
+            <div class="modal-body">
+                <input type="text" id="editTitle" class="modal-input" placeholder="수정할 제목">
+                <input type="password" id="editPassword" class="modal-input" placeholder="비밀번호">
+            </div>
+            <div class="modal-footer">
+                <button class="modal-btn secondary" onclick="closeModal()">취소</button>
+                <button class="modal-btn primary" onclick="confirmEdit()">수정</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 삭제 모달 -->
+    <div class="modal" id="deleteModal">
+        <div class="modal-content">
+            <div class="modal-header">게시글 삭제</div>
+            <div class="modal-body">
+                <p>정말로 삭제하시겠습니까?</p>
+                <input type="password" id="deletePassword" class="modal-input" placeholder="비밀번호">
+            </div>
+            <div class="modal-footer">
+                <button class="modal-btn secondary" onclick="closeModal()">취소</button>
+                <button class="modal-btn primary" onclick="confirmDelete()">삭제</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Supabase JavaScript SDK -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     
@@ -45,6 +194,8 @@
         const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
         let reports = [];
+        let currentEditId = null;
+        let currentDeleteId = null;
 
         // 페이지 로드시 데이터 가져오기
         async function loadReports() {
@@ -67,8 +218,6 @@
                 
             } catch (error) {
                 console.error('데이터 로드 오류:', error);
-                
-                // 연결 실패시에도 빈 배열로 초기화
                 reports = [];
                 renderReports();
             }
@@ -91,27 +240,33 @@
             event.preventDefault();
             
             const titleInput = document.getElementById('title');
+            const passwordInput = document.getElementById('password');
             const submitBtn = document.getElementById('submitBtn');
             const title = titleInput.value.trim();
+            const password = passwordInput.value.trim();
             
             if (!title) {
                 alert('제목을 입력해 주세요.');
                 return;
             }
+            
+            if (!password) {
+                alert('비밀번호를 입력해 주세요.');
+                return;
+            }
 
-            // 제출 버튼 비활성화
             submitBtn.disabled = true;
             submitBtn.textContent = '제출 중...';
 
             try {
                 console.log('데이터 저장 시작:', title);
                 
-                // Supabase에 데이터 저장
                 const { data, error } = await supabase
                     .from('newreports')
                     .insert([
                         {
                             title: title,
+                            password: password,
                             date: getCurrentDateTime()
                         }
                     ])
@@ -124,29 +279,18 @@
 
                 console.log('저장 성공:', data);
 
-                // 성공시 로컬 배열에도 추가
                 if (data && data[0]) {
                     reports.unshift(data[0]);
                     renderReports();
                 }
                 
-                // 성공 메시지 표시
-                const successMsg = document.getElementById('successMessage');
-                successMsg.innerHTML = '<div class="success-message">제보가 성공적으로 등록되었습니다!</div>';
-                successMsg.style.display = 'block';
-                
-                setTimeout(() => {
-                    successMsg.style.display = 'none';
-                }, 3000);
-                
-                // 폼 초기화
                 titleInput.value = '';
+                passwordInput.value = '';
                 
             } catch (error) {
                 console.error('저장 오류:', error);
                 alert('저장 중 오류가 발생했습니다. 다시 시도해주세요.\n오류: ' + error.message);
             } finally {
-                // 제출 버튼 다시 활성화
                 submitBtn.disabled = false;
                 submitBtn.textContent = '📝 제출하기';
             }
@@ -162,13 +306,138 @@
             
             boardList.innerHTML = reports.map(report => `
                 <div class="board-item">
-                    <div style="display: flex; align-items: center;">
-                        <span class="board-number">No.${report.id}</span>
+                    <div style="display: flex; align-items: center; width: 100%;">
+                        <span class="board-number">No.${report.id || '?'}</span>
                         <span class="board-title">${report.title || '(제목 없음)'}</span>
+                        <div class="board-actions">
+                            <button class="action-btn edit-btn" onclick="openEditModal(${report.id}, '${report.title}')">수정</button>
+                            <button class="action-btn delete-btn" onclick="openDeleteModal(${report.id})">삭제</button>
+                        </div>
                     </div>
                     <span class="board-date">${report.date}</span>
                 </div>
             `).join('');
+        }
+
+        function openEditModal(id, title) {
+            currentEditId = id;
+            document.getElementById('editTitle').value = title.replace(/'/g, "");
+            document.getElementById('editPassword').value = '';
+            document.getElementById('editModal').style.display = 'flex';
+        }
+
+        function openDeleteModal(id) {
+            currentDeleteId = id;
+            document.getElementById('deletePassword').value = '';
+            document.getElementById('deleteModal').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('editModal').style.display = 'none';
+            document.getElementById('deleteModal').style.display = 'none';
+            currentEditId = null;
+            currentDeleteId = null;
+        }
+
+        async function confirmEdit() {
+            const newTitle = document.getElementById('editTitle').value.trim();
+            const password = document.getElementById('editPassword').value.trim();
+            
+            if (!newTitle) {
+                alert('제목을 입력해주세요.');
+                return;
+            }
+            
+            if (!password) {
+                alert('비밀번호를 입력해주세요.');
+                return;
+            }
+
+            try {
+                // 비밀번호 확인
+                const { data: checkData, error: checkError } = await supabase
+                    .from('newreports')
+                    .select('password')
+                    .eq('id', currentEditId)
+                    .single();
+
+                if (checkError) throw checkError;
+
+                if (checkData.password !== password) {
+                    alert('비밀번호가 일치하지 않습니다.');
+                    return;
+                }
+
+                // 제목 수정
+                const { data, error } = await supabase
+                    .from('newreports')
+                    .update({ 
+                        title: newTitle,
+                        date: getCurrentDateTime() + ' (수정됨)'
+                    })
+                    .eq('id', currentEditId)
+                    .select();
+
+                if (error) throw error;
+
+                // 로컬 배열도 업데이트
+                const index = reports.findIndex(r => r.id === currentEditId);
+                if (index !== -1) {
+                    reports[index] = { ...reports[index], title: newTitle, date: getCurrentDateTime() + ' (수정됨)' };
+                    renderReports();
+                }
+
+                closeModal();
+                alert('수정되었습니다.');
+
+            } catch (error) {
+                console.error('수정 오류:', error);
+                alert('수정 중 오류가 발생했습니다.');
+            }
+        }
+
+        async function confirmDelete() {
+            const password = document.getElementById('deletePassword').value.trim();
+            
+            if (!password) {
+                alert('비밀번호를 입력해주세요.');
+                return;
+            }
+
+            try {
+                // 비밀번호 확인
+                const { data: checkData, error: checkError } = await supabase
+                    .from('newreports')
+                    .select('password')
+                    .eq('id', currentDeleteId)
+                    .single();
+
+                if (checkError) throw checkError;
+
+                if (checkData.password !== password) {
+                    alert('비밀번호가 일치하지 않습니다.');
+                    return;
+                }
+
+                // 게시글 삭제
+                const { error } = await supabase
+                    .from('newreports')
+                    .delete()
+                    .eq('id', currentDeleteId);
+
+                if (error) throw error;
+
+                // 로컬 배열에서도 제거
+                reports = reports.filter(r => r.id !== currentDeleteId);
+                renderReports();
+
+                closeModal();
+                alert('삭제되었습니다.');
+
+            } catch (error) {
+                console.error('삭제 오류:', error);
+                alert('삭제 중 오류가 발생했습니다.');
+            }
         }
 
         // 페이지 로드 시 초기화
@@ -177,19 +446,46 @@
             loadReports();
         });
 
-        // 실시간 업데이트 (다른 사용자가 추가한 게시글 실시간 반영)
+        // 실시간 업데이트
         supabase
             .channel('newreports_channel')
             .on('postgres_changes', 
                 { event: 'INSERT', schema: 'public', table: 'newreports' }, 
                 (payload) => {
                     console.log('새 게시글 실시간 수신:', payload.new);
-                    // 새 게시글을 맨 앞에 추가
                     reports.unshift(payload.new);
                     renderReports();
                 }
             )
+            .on('postgres_changes', 
+                { event: 'UPDATE', schema: 'public', table: 'newreports' }, 
+                (payload) => {
+                    console.log('게시글 수정 실시간 수신:', payload.new);
+                    const index = reports.findIndex(r => r.id === payload.new.id);
+                    if (index !== -1) {
+                        reports[index] = payload.new;
+                        renderReports();
+                    }
+                }
+            )
+            .on('postgres_changes', 
+                { event: 'DELETE', schema: 'public', table: 'newreports' }, 
+                (payload) => {
+                    console.log('게시글 삭제 실시간 수신:', payload.old);
+                    reports = reports.filter(r => r.id !== payload.old.id);
+                    renderReports();
+                }
+            )
             .subscribe();
+
+        // 모달 외부 클릭시 닫기
+        window.onclick = function(event) {
+            const editModal = document.getElementById('editModal');
+            const deleteModal = document.getElementById('deleteModal');
+            if (event.target === editModal || event.target === deleteModal) {
+                closeModal();
+            }
+        }
     </script>
 </body>
 </html>
