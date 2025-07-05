@@ -289,8 +289,8 @@ body {
     flex: 1;
     resize: both;
     overflow: hidden;
-    min-height: 26px;           /* 더 작게 */
-    height: 26px;
+    min-height: 64px;           /* 더 작게 */
+    height: 64px;
     line-height: 1.2;
     padding: 4px 8px;           /* 패딩도 조금 줄임 */
     border: 1px solid #ccc;
