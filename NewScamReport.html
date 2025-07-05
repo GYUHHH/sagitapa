@@ -16,7 +16,7 @@
         <div class="write-form">
             <form onsubmit="submitReport(event)">
                 <div class="form-row">
-                    <input type="text" id="title" placeholder="내용을 입력하세요..." maxlength="100" required>
+                    <textarea id="title" placeholder="내용을 입력하세요..." maxlength="100" required rows="1"></textarea>
                     <input type="password" id="password" placeholder="비밀번호" maxlength="20" required>
                     <button type="submit" class="submit-btn" id="submitBtn">📝 제출하기</button>
                 </div>
@@ -174,7 +174,7 @@
                 alert('저장 중 오류가 발생했습니다. 다시 시도해주세요.\n오류: ' + error.message);
             } finally {
                 submitBtn.disabled = false;
-                submitBtn.textContent = '📝 제출하기';
+                submitBtn.textContent = '📝 등록하기';
             }
         }
 
@@ -326,6 +326,19 @@
         document.addEventListener('DOMContentLoaded', function() {
             console.log('페이지 로드 완료, 데이터 로딩 시작');
             loadReports();
+            // 엔터키 이벤트
+            document.getElementById('title').addEventListener('keydown', function(event) {
+                if (event.key === 'Enter' && !event.shiftKey) {
+                    event.preventDefault();
+                    document.getElementById('submitBtn').click();
+                }
+            });
+
+            // 자동 높이 조절
+            document.getElementById('title').addEventListener('input', function() {
+                this.style.height = 'auto';
+                this.style.height = this.scrollHeight + 'px';
+            });
         });
 
         // 실시간 업데이트
