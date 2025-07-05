@@ -286,4 +286,6 @@ body {
   resize: none;
   overflow: hidden;
   min-height: 32px;
+  height: 32px;        /* 추가: 초기 높이 고정 */
+  line-height: 1.2;    /* 추가: 줄 높이 설정 */
 }
