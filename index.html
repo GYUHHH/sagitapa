@@ -314,14 +314,72 @@
         .menu-section-header {
             background: linear-gradient(to bottom, #f5f5f5, #e8e8e8);
             border-bottom: 1px solid #ddd;
-            padding: 10px 15px;
+            padding: 10px 15px; /* 다시 원래 크기로 */
             font-weight: bold;
             color: #333;
             font-size: 13px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .menu-section-header:hover {
+            background: linear-gradient(to bottom, #e8e8e8, #ddd);
+        }
+
+        .menu-section-header.notice-header {
+            padding: 4px 15px; /* 공지사항 헤더만 더 작게 */
+        }
+
+        .menu-section-header.contact-header {
+            padding: 8px 15px; /* 문의하기 헤더 조금 늘림 */
+        }
+
+        .menu-section-header.board-header {
+            padding: 8px 15px; /* 게시판 헤더 조금 늘림 */
+        }
+
+        .board-links {
+            display: flex;
+            flex-direction: column;
+            gap: 4px; /* 간격을 8px에서 4px로 줄임 */
+        }
+
+        .board-link {
+            display: block;
+            padding: 8px 12px;
+            color: #333;
+            text-decoration: none;
+            font-size: 11px;
+            transition: all 0.2s ease;
+            border-radius: 3px;
+        }
+
+        .board-link:hover {
+            background-color: #e6f3ff;
+            color: #2e5c87;
+        }
+
+        .menu-section-header .toggle-arrow {
+            font-size: 12px;
+            /* 회전 애니메이션 제거 */
+        }
+
+        .menu-section-header.collapsed .toggle-arrow {
+            /* 회전 없이 그대로 유지 */
         }
 
         .menu-section-content {
             padding: 15px;
+            display: block;
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+
+        .menu-section-content.collapsed {
+            display: none;
         }
 
         .admin-btn, .submit-btn, .upload-btn, .google-lens-btn {
@@ -484,13 +542,75 @@
             visibility: visible;
         }
 
-        .admin-form {
+        .admin-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(0,0,0,0.5);
             display: none;
-            margin-top: 10px;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
         }
 
-        .admin-form.show {
-            display: block;
+        .admin-modal.show {
+            display: flex;
+        }
+
+        .admin-modal-content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            width: 300px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+
+        .admin-modal-header {
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #333;
+            text-align: center;
+        }
+
+        .admin-modal-body {
+            margin-bottom: 15px;
+        }
+
+        .admin-modal-footer {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .modal-btn {
+            flex: 1;
+            padding: 8px 12px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 11px;
+        }
+
+        .modal-btn.primary {
+            background: linear-gradient(to bottom, #4a90e2, #357abd);
+            color: white;
+            border-color: #2e5c87;
+        }
+
+        .modal-btn.primary:hover {
+            background: linear-gradient(to bottom, #357abd, #2e5c87);
+        }
+
+        .modal-btn.secondary {
+            background: linear-gradient(to bottom, #f5f5f5, #e8e8e8);
+            color: #333;
+        }
+
+        .modal-btn.secondary:hover {
+            background: linear-gradient(to bottom, #e8e8e8, #ddd);
         }
 
         #imagePreview {
@@ -547,24 +667,24 @@
                 <div class="section">
                     <div class="section-header">거래 방식 의심 신호</div>
                     <div class="section-content">
-                        <div class="item">
+                        <div class="item clickable" onclick="showExample('boss', this)">
                             <div class="item-text">
-                                <span class="danger-text">사장님</span>이라는 호칭을 사용한다
+                                <span class="danger-text">사장님</span>이라는 호칭을 사용하나요?
                             </div>
                         </div>
-                        <div class="item">
+                        <div class="item clickable" onclick="showExample('delivery', this)">
                             <div class="item-text">
-                                지역이 너무 멀다면서 <span class="danger-text">택배 거래</span>로 유도한다
+                                지역이 너무 멀다면서 <span class="danger-text">택배 거래</span>로 유도하나요?
                             </div>
                         </div>
-                        <div class="item">
+                        <div class="item clickable" onclick="showExample('messenger', this)">
                             <div class="item-text">
-                                전화번호가 아닌 <span class="danger-text">카카오톡이나 텔레그램</span> 등 다른 메신저로 유도한다
+                                전화번호가 아닌 <span class="danger-text">카카오톡이나 텔레그램</span> 등 다른 메신저로 유도하나요?
                             </div>
                         </div>
                         <div class="item clickable" onclick="showExample('safesite', this)">
                             <div class="item-text">
-                                <span class="danger-text">안전거래 사이트 링크</span>를 주고 이쪽에서 결제하라고 한다
+                                <span class="danger-text">안전거래 사이트 링크</span>를 주고 이쪽에서 결제하라고 하나요?
                             </div>
                         </div>
                     </div>
@@ -573,19 +693,19 @@
                 <div class="section">
                     <div class="section-header">추가 결제 유도</div>
                     <div class="section-content">
-                        <div class="item clickable" onclick="showExample('point', this)">
+                        <div class="item clickable" onclick="showExample('shopping', this)">
                             <div class="item-text">
-                                포인트 써야 한다면서 <span class="danger-text">다른 웹사이트에 등록</span>하라고 유도한다
+                                <span class="danger-text">다른 쇼핑몰 사이트에 등록</span>해달라고 유도하나요?
                             </div>
                         </div>
-                        <div class="item">
+                        <div class="item clickable" onclick="showExample('point', this)">
                             <div class="item-text">
-                                <span class="danger-text">다른 쇼핑몰 사이트에 등록</span>해달라고 유도한다
+                                포인트 써야 한다면서 <span class="danger-text">다른 웹사이트에 등록</span>하라고 유도하나요?
                             </div>
                         </div>
                         <div class="item clickable" onclick="showExample('fee', this)">
                             <div class="item-text">
-                                입금했는데 <span class="danger-text">수수료</span> 어쩌고 하면서 재입금을 유도한다
+                                입금했는데 <span class="danger-text">수수료</span> 어쩌고 하면서 재입금을 유도하나요?
                             </div>
                         </div>
                     </div>
@@ -594,19 +714,19 @@
                 <div class="section">
                     <div class="section-header">프로필 의심 신호</div>
                     <div class="section-content">
-                        <div class="item">
+                        <div class="item clickable" onclick="showExample('no_history', this)">
                             <div class="item-text">
-                                프로필을 누르면 <span class="danger-text">거래 기록 내역이 거의 없다</span>
+                                프로필을 누르면 <span class="danger-text">거래 기록 내역이 거의 없나요?</span>
                             </div>
                         </div>
-                        <div class="item">
+                        <div class="item clickable" onclick="showExample('new_user', this)">
                             <div class="item-text">
-                                프로필 보면 <span class="danger-text">가입한 지 얼마되지 않은</span> 이용자다
+                                프로필 보면 <span class="danger-text">가입한 지 얼마되지 않은</span> 이용자인가요?
                             </div>
                         </div>
                         <div class="item clickable" onclick="showExample('profile', this)">
                             <div class="item-text">
-                                프로필 보면 거래 기록 내역이 많지만 <span class="danger-text">근 몇 년 간 없다가 다시 생겼다</span>
+                                프로필 보면 거래 기록 내역이 많지만 <span class="danger-text">근 몇 년 간 없다가 다시 생겼나요?</span>
                             </div>
                         </div>
                     </div>
@@ -615,24 +735,24 @@
                 <div class="section">
                     <div class="section-header">사진 및 인증 의심 신호</div>
                     <div class="section-content">
-                        <div class="item">
+                        <div class="item clickable" onclick="showExample('id_verify', this)">
                             <div class="item-text">
-                                <span class="danger-text">민증으로 인증</span>을 요구한다
+                                <span class="danger-text">민증으로 인증</span>하려고 하나요?
                             </div>
                         </div>
-                        <div class="item">
+                        <div class="item clickable" onclick="showExample('photo_date', this)">
                             <div class="item-text">
-                                사진 날짜가 <span class="danger-text">오늘 찍은 게 아니다</span> (사진 정보에서 확인 가능)
+                                사진 날짜가 <span class="danger-text">오늘 찍은 게 아닌가요?</span> (사진 정보에서 확인 가능)
                             </div>
                         </div>
-                        <div class="item">
+                        <div class="item clickable" onclick="showExample('fake_photo', this)">
                             <div class="item-text">
-                                받은 사진이 <span class="danger-text">합성</span>인 것 같다
+                                받은 사진이 <span class="danger-text">합성</span>인 것 같나요?
                             </div>
                         </div>
-                        <div class="item">
+                        <div class="item clickable" onclick="showExample('stolen_photo', this)">
                             <div class="item-text">
-                                받은 사진이 <span class="danger-text">도용</span>인 것 같다
+                                받은 사진이 <span class="danger-text">도용</span>인 것 같나요?
                             </div>
                         </div>
                         <div class="image-upload-section">
@@ -648,16 +768,10 @@
                 <div class="section">
                     <div class="section-header">사기 신고 카페 확인</div>
                     <div class="section-content">
-                        <div class="item">
+                        <div class="item clickable" onclick="showExample('scam_search', this)">
                             <div class="item-text">
-                                사기 신고 카페에서 <span class="danger-text">해당 이름이 검색</span>된다
+                                사기 신고 카페에서 <span class="danger-text">해당 이름이 검색</span>되나요?
                             </div>
-                        </div>
-                        <div class="link-section">
-                            <h3>사기 신고 카페 검색</h3>
-                            <a href="https://cafe.naver.com/saginara" target="_blank">사기나라 카페</a>
-                            <a href="https://cafe.naver.com/killer1818" target="_blank">중고거래사기피해 카페</a>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -681,19 +795,14 @@
             </div>
             
             <div class="menu-section">
-                <div class="menu-section-header" style="display: flex; justify-content: space-between; align-items: center;">
-                    <span>📢 공지사항</span>
-                    <button class="admin-btn" onclick="toggleAdminForm()" style="margin: 0; padding: 4px 8px; font-size: 10px;">관리</button>
-                </div>
-                <div class="menu-section-content">
-                    <div class="admin-form" id="adminForm">
-                        <input type="password" class="admin-input" id="adminPassword" placeholder="관리자 비밀번호">
-                        <button class="admin-btn" onclick="verifyAdmin()">확인</button>
-                        <div id="noticeManagement" style="display: none;">
-                            <textarea class="admin-input" id="noticeContent" placeholder="공지사항 내용을 입력하세요" rows="3"></textarea>
-                            <button class="admin-btn" onclick="addNotice()">공지사항 추가</button>
-                        </div>
+                <div class="menu-section-header notice-header" onclick="toggleMenuSection('notice')" id="noticeHeader">
+                    <div style="display: flex; align-items: center;">
+                        <span>📢 공지사항</span>
+                        <button class="admin-btn" onclick="event.stopPropagation(); showAdminModal()" style="margin-left: 10px; padding: 4px 8px; font-size: 10px;">관리</button>
                     </div>
+                    <span class="toggle-arrow">▼</span>
+                </div>
+                <div class="menu-section-content" id="noticeContent">
                     <div class="notice-list" id="noticeList">
                         <!-- 공지사항이 여기에 표시됩니다 -->
                     </div>
@@ -701,8 +810,24 @@
             </div>
             
             <div class="menu-section">
-                <div class="menu-section-header">📞 문의하기</div>
-                <div class="menu-section-content">
+                <div class="menu-section-header board-header" onclick="toggleMenuSection('board')" id="boardHeader">
+                    <span>📋 게시판</span>
+                    <span class="toggle-arrow">▼</span>
+                </div>
+                <div class="menu-section-content" id="boardContent">
+                    <div class="board-links">
+                        <a href="#" class="board-link" onclick="alert('사기 제보 게시판 준비 중입니다.')">사기를 제보합니다</a>
+                        <a href="#" class="board-link" onclick="alert('새로운 사기 수법 제보 게시판 준비 중입니다.')">새로운 사기 수법을 제보합니다</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="menu-section">
+                <div class="menu-section-header contact-header" onclick="toggleMenuSection('contact')" id="contactHeader">
+                    <span>📞 문의하기</span>
+                    <span class="toggle-arrow">▼</span>
+                </div>
+                <div class="menu-section-content" id="contactContent">
                     <form class="contact-form" id="contactForm" onsubmit="submitContact(event)">
                         <div class="form-group">
                             <label for="contactEmail">이메일 주소</label>
@@ -725,13 +850,37 @@
         </div>
     </div>
 
+    <!-- 관리자 모달 -->
+    <div class="admin-modal" id="adminModal">
+        <div class="admin-modal-content">
+            <div class="admin-modal-header">관리자 인증</div>
+            <div class="admin-modal-body">
+                <div class="form-group">
+                    <label for="modalAdminPassword">관리자 비밀번호</label>
+                    <input type="password" id="modalAdminPassword" class="admin-input" placeholder="비밀번호를 입력하세요">
+                </div>
+                <div id="modalNoticeManagement" style="display: none;">
+                    <div class="form-group">
+                        <label for="modalNoticeContent">공지사항 내용</label>
+                        <textarea id="modalNoticeContent" class="admin-input" placeholder="공지사항 내용을 입력하세요" rows="4"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="admin-modal-footer">
+                <button class="modal-btn secondary" onclick="closeAdminModal()">취소</button>
+                <button class="modal-btn primary" id="modalVerifyBtn" onclick="verifyModalAdmin()">확인</button>
+                <button class="modal-btn primary" id="modalAddBtn" style="display: none;" onclick="addModalNotice()">공지사항 추가</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         // 전역 변수들
         const imageInput = document.getElementById('imageInput');
         const googleLensBtn = document.getElementById('googleLensBtn');
         let uploadedImageUrl = null;
         let notices = [];
-        const ADMIN_PASSWORD = "admin123";
+        const ADMIN_PASSWORD = "sp23-e933-w112";
         const RECEIVER_EMAIL = 'your-email@gmail.com'; // 여기에 본인 이메일 입력
 
         // 예시 이미지
@@ -741,9 +890,29 @@
 
         // 예시 데이터
         const examples = {
+            boss: {
+                title: '사장님 호칭 사용',
+                description: '낯선 상대방이 갑자기 "사장님"이라고 부르는 것은 상대를 기분 좋게 만들어 경계심을 늦추려는 심리적 기법입니다. 정상적인 거래에서는 이런 과도한 존댓말을 사용하지 않습니다.',
+                image: exampleImages.timespot
+            },
+            delivery: {
+                title: '택배 거래 유도',
+                description: '직거래를 피하고 택배 거래를 유도하는 것은 사기의 전형적인 패턴입니다. 물건을 보내지 않거나 가짜 물건을 보낼 수 있습니다. 가능하면 직거래를 하거나 안전거래 서비스를 이용하세요.',
+                image: exampleImages.timespot
+            },
+            messenger: {
+                title: '다른 메신저 유도',
+                description: '중고거래 앱 내에서 대화하지 않고 카카오톡, 텔레그램 등으로 유도하는 것은 증거를 남기지 않으려는 의도입니다. 항상 거래 앱 내에서 대화하는 것이 안전합니다.',
+                image: exampleImages.timespot
+            },
             safesite: {
                 title: '가짜 안전거래 사이트',
                 description: '진짜같은 안전거래 사이트 링크를 보내며 결제를 유도합니다. 공식 사이트가 아닌 경우 절대 결제하지 마세요.',
+                image: exampleImages.timespot
+            },
+            shopping: {
+                title: '쇼핑몰 등록 유도',
+                description: '다른 쇼핑몰이나 결제 사이트에 회원가입을 요구하며 개인정보를 빼내려는 수법입니다. 정당한 거래라면 굳이 다른 사이트 가입을 요구하지 않습니다.',
                 image: exampleImages.timespot
             },
             point: {
@@ -756,9 +925,44 @@
                 description: '입금 후 수수료나 세금 등의 명목으로 추가 입금을 요구하는 전형적인 사기 수법입니다.',
                 image: exampleImages.timespot
             },
+            no_history: {
+                title: '거래 기록 부족',
+                description: '거래 기록이 거의 없는 계정은 새로 만든 사기 계정일 가능성이 높습니다. 상대방의 거래 기록과 평점을 꼼꼼히 확인하세요.',
+                image: exampleImages.timespot
+            },
+            new_user: {
+                title: '신규 가입자',
+                description: '최근에 가입한 계정은 사기 목적으로 새로 만든 계정일 수 있습니다. 신규 가입자와 거래할 때는 더욱 신중하게 접근하세요.',
+                image: exampleImages.timespot
+            },
             profile: {
                 title: '휴면 후 재활동',
                 description: '예전에는 거래 기록이 많았지만 몇 년간 활동이 없다가 갑자기 활동을 시작한 계정은 해킹되었을 가능성이 높습니다. 이런 계정들은 사기꾼이 탈취해서 사용하는 경우가 많습니다.',
+                image: exampleImages.timespot
+            },
+            id_verify: {
+                title: '신분증 인증 요구',
+                description: '중고거래에서 신분증 인증을 요구하는 것은 매우 이상합니다. 개인정보를 빼내려는 목적이거나 신분증을 악용할 수 있습니다. 절대 신분증 사진을 보내지 마세요.',
+                image: exampleImages.timespot
+            },
+            photo_date: {
+                title: '오래된 사진 사용',
+                description: '상품 사진의 촬영 날짜가 오늘이 아니라면 실제 보유하지 않은 물건일 수 있습니다. 스마트폰에서 사진 정보를 확인하여 언제 찍은 사진인지 확인해보세요.',
+                image: exampleImages.timespot
+            },
+            fake_photo: {
+                title: '합성 사진 의심',
+                description: '사진이 부자연스럽거나 화질이 이상하다면 합성 사진일 수 있습니다. 실시간 영상통화나 추가 사진을 요청해보세요.',
+                image: exampleImages.timespot
+            },
+            stolen_photo: {
+                title: '도용 사진 의심',
+                description: '인터넷에서 가져온 사진을 사용할 수 있습니다. 구글 렌즈나 이미지 검색으로 같은 사진이 다른 곳에서 사용되는지 확인해보세요.',
+                image: exampleImages.timespot
+            },
+            scam_search: {
+                title: '사기 신고 확인',
+                description: '상대방의 이름이나 계정 정보를 사기 신고 카페에서 검색해보세요. 이미 신고된 사기꾼일 수 있습니다.<br><br>사기 신고 카페 링크:<br>• <a href="https://cafe.naver.com/saginara" target="_blank" style="color: #4a90e2; text-decoration: underline;">사기나라 카페</a><br>• <a href="https://cafe.naver.com/killer1818" target="_blank" style="color: #4a90e2; text-decoration: underline;">중고거래사기피해 카페</a>',
                 image: exampleImages.timespot
             }
         };
@@ -785,8 +989,8 @@
             if (example) {
                 panelContent.innerHTML = `
                     <div class="example-title">${example.title}</div>
+                    <div class="example-description">${example.description}</div>
                     <img src="${example.image}" alt="${example.title}" class="example-image" onerror="this.style.display='none';">
-                    <div class="example-description" style="white-space: pre-line;">${example.description}</div>
                 `;
                 
                 container.classList.add('panel-open');
@@ -804,6 +1008,74 @@
             
             container.classList.remove('panel-open');
             rightPanel.classList.remove('show');
+        }
+
+        function toggleMenuSection(sectionType) {
+            const header = document.getElementById(sectionType + 'Header');
+            const content = document.getElementById(sectionType + 'Content');
+            const arrow = header.querySelector('.toggle-arrow');
+            
+            if (content.classList.contains('collapsed')) {
+                content.classList.remove('collapsed');
+                header.classList.remove('collapsed');
+                // 화살표는 항상 아래 방향 유지
+                arrow.textContent = '▼';
+            } else {
+                content.classList.add('collapsed');
+                header.classList.add('collapsed');
+                // 화살표는 항상 아래 방향 유지
+                arrow.textContent = '▼';
+            }
+        }
+
+        function showAdminModal() {
+            const modal = document.getElementById('adminModal');
+            modal.classList.add('show');
+            document.getElementById('modalAdminPassword').value = '';
+            document.getElementById('modalNoticeContent').value = '';
+            document.getElementById('modalNoticeManagement').style.display = 'none';
+            document.getElementById('modalVerifyBtn').style.display = 'inline-block';
+            document.getElementById('modalAddBtn').style.display = 'none';
+        }
+
+        function closeAdminModal() {
+            const modal = document.getElementById('adminModal');
+            modal.classList.remove('show');
+        }
+
+        function verifyModalAdmin() {
+            const password = document.getElementById('modalAdminPassword').value;
+            const noticeManagement = document.getElementById('modalNoticeManagement');
+            const verifyBtn = document.getElementById('modalVerifyBtn');
+            const addBtn = document.getElementById('modalAddBtn');
+            
+            if (password === ADMIN_PASSWORD) {
+                noticeManagement.style.display = 'block';
+                verifyBtn.style.display = 'none';
+                addBtn.style.display = 'inline-block';
+                alert('관리자 인증이 완료되었습니다.');
+            } else {
+                alert('비밀번호가 올바르지 않습니다.');
+            }
+        }
+
+        function addModalNotice() {
+            const content = document.getElementById('modalNoticeContent').value.trim();
+            if (!content) {
+                alert('공지사항 내용을 입력해주세요.');
+                return;
+            }
+            
+            const notice = {
+                id: Date.now(),
+                date: new Date().toLocaleDateString('ko-KR'),
+                content: content
+            };
+            
+            notices.unshift(notice);
+            renderNotices();
+            closeAdminModal();
+            alert('공지사항이 추가되었습니다.');
         }
 
         function toggleSideMenu() {
@@ -827,38 +1099,15 @@
         }
 
         function toggleAdminForm() {
-            const adminForm = document.getElementById('adminForm');
-            adminForm.classList.toggle('show');
+            // 기존 함수는 사용하지 않음 - 모달로 대체
         }
 
         function verifyAdmin() {
-            const password = document.getElementById('adminPassword').value;
-            const noticeManagement = document.getElementById('noticeManagement');
-            
-            if (password === ADMIN_PASSWORD) {
-                noticeManagement.style.display = 'block';
-                alert('관리자 인증이 완료되었습니다.');
-            } else {
-                alert('비밀번호가 올바르지 않습니다.');
-            }
+            // 기존 함수는 사용하지 않음 - 모달로 대체
         }
 
         function addNotice() {
-            const content = document.getElementById('noticeContent').value.trim();
-            if (!content) {
-                alert('공지사항 내용을 입력해주세요.');
-                return;
-            }
-            
-            const notice = {
-                id: Date.now(),
-                date: new Date().toLocaleDateString('ko-KR'),
-                content: content
-            };
-            
-            notices.unshift(notice);
-            renderNotices();
-            document.getElementById('noticeContent').value = '';
+            // 기존 함수는 사용하지 않음 - 모달로 대체
         }
 
         function deleteNotice(id) {
