@@ -1,0 +1,984 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>중고거래 사기 예방 체크리스트</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Gulim', '굴림', 'MS Sans Serif', sans-serif;
+            background-color: #f8f8f8;
+            color: #333;
+            line-height: 1.4;
+            font-size: 12px;
+            margin: 0;
+            padding: 15px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            border: 1px solid #ddd;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .container.panel-open {
+            max-width: 1400px;
+        }
+
+        .header {
+            background: linear-gradient(to bottom, #4a90e2, #357abd);
+            color: white;
+            padding: 15px 20px;
+            border-bottom: 2px solid #2e5c87;
+            position: relative;
+        }
+
+        .hamburger-menu {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.3);
+            cursor: pointer;
+            padding: 6px;
+            border-radius: 3px;
+            z-index: 998;
+            transition: opacity 0.3s ease;
+        }
+
+        .hamburger-menu.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .hamburger-menu:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        .hamburger-icon {
+            display: flex;
+            flex-direction: column;
+            width: 18px;
+            height: 14px;
+            justify-content: space-between;
+        }
+
+        .hamburger-line {
+            width: 100%;
+            height: 2px;
+            background-color: white;
+        }
+
+        .header h1 {
+            text-align: center;
+            font-size: 16px;
+            font-weight: bold;
+            margin: 0;
+        }
+
+        .main-content {
+            display: flex;
+            min-height: 600px;
+        }
+
+        .left-panel {
+            flex: 1;
+            padding: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .container.panel-open .left-panel {
+            width: calc(100% - 400px);
+            flex: none;
+        }
+
+        .section {
+            margin-bottom: 25px;
+            border: 1px solid #ddd;
+            background-color: #ffffff;
+        }
+
+        .section-header {
+            background: linear-gradient(to bottom, #f5f5f5, #e8e8e8);
+            border-bottom: 1px solid #ddd;
+            padding: 10px 15px;
+            font-weight: bold;
+            color: #333;
+            font-size: 13px;
+        }
+
+        .section-content {
+            padding: 15px;
+        }
+
+        .item {
+            margin: 8px 0;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border: 1px solid #e0e0e0;
+            font-size: 12px;
+            border-radius: 2px;
+        }
+
+        .item.clickable {
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+            background-color: #fff;
+            border-left: 3px solid #4a90e2;
+        }
+
+        .item.clickable:hover {
+            background-color: #f0f8ff;
+            border-color: #357abd;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .item.clickable.active {
+            background-color: #e6f3ff;
+            border-left-color: #2e5c87;
+        }
+
+        .item.clickable::after {
+            content: '▶';
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 10px;
+            color: #4a90e2;
+            opacity: 0.7;
+        }
+
+        .item.clickable:hover::after {
+            opacity: 1;
+        }
+
+        .item-text {
+            font-size: 12px;
+            color: #333;
+            line-height: 1.4;
+        }
+
+        .danger-text {
+            color: #d63031;
+            font-weight: bold;
+        }
+
+        .right-panel {
+            position: fixed;
+            top: 0;
+            right: -400px;
+            width: 400px;
+            height: 100vh;
+            background-color: #f8f8f8;
+            border-left: 1px solid #ddd;
+            transition: right 0.3s ease;
+            z-index: 1000;
+            overflow-y: auto;
+            box-shadow: -2px 0 5px rgba(0,0,0,0.1);
+        }
+
+        .right-panel.show {
+            right: 0;
+        }
+
+        .panel-header {
+            background: linear-gradient(to bottom, #4a90e2, #357abd);
+            color: white;
+            padding: 15px;
+            border-bottom: 1px solid #2e5c87;
+            position: relative;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            background: rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.3);
+            color: white;
+            cursor: pointer;
+            width: 24px;
+            height: 24px;
+            border-radius: 3px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
+
+        .close-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        .panel-content {
+            padding: 20px;
+        }
+
+        .example-title {
+            font-size: 14px;
+            font-weight: bold;
+            color: #2e5c87;
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #4a90e2;
+        }
+
+        .example-image {
+            max-width: 100%;
+            height: auto;
+            border: 1px solid #ddd;
+            margin: 15px 0;
+            border-radius: 3px;
+        }
+
+        .example-description {
+            font-size: 12px;
+            color: #555;
+            line-height: 1.5;
+            background-color: #f9f9f9;
+            padding: 15px;
+            border: 1px solid #e0e0e0;
+            border-radius: 3px;
+        }
+
+        .side-menu {
+            position: fixed;
+            top: 0;
+            left: -320px;
+            width: 320px;
+            height: 100vh;
+            background-color: #f8f8f8;
+            border-right: 1px solid #ddd;
+            transition: left 0.3s ease;
+            z-index: 1000;
+            overflow-y: auto;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+        }
+
+        .side-menu.show {
+            left: 0;
+        }
+
+        .side-menu-header {
+            background: linear-gradient(to bottom, #4a90e2, #357abd);
+            color: white;
+            padding: 15px;
+            border-bottom: 1px solid #2e5c87;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .side-menu-title {
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .side-close-btn {
+            background: rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.3);
+            color: white;
+            cursor: pointer;
+            width: 24px;
+            height: 24px;
+            border-radius: 3px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
+
+        .side-close-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        .menu-section {
+            margin-bottom: 25px;
+            border: 1px solid #ddd;
+            background-color: #ffffff;
+            margin: 15px;
+        }
+
+        .menu-section-header {
+            background: linear-gradient(to bottom, #f5f5f5, #e8e8e8);
+            border-bottom: 1px solid #ddd;
+            padding: 10px 15px;
+            font-weight: bold;
+            color: #333;
+            font-size: 13px;
+        }
+
+        .menu-section-content {
+            padding: 15px;
+        }
+
+        .admin-btn, .submit-btn, .upload-btn, .google-lens-btn {
+            background: linear-gradient(to bottom, #f5f5f5, #e8e8e8);
+            border: 1px solid #ccc;
+            color: #333;
+            padding: 6px 12px;
+            cursor: pointer;
+            font-size: 11px;
+            border-radius: 3px;
+            margin: 3px;
+        }
+
+        .admin-btn:hover, .submit-btn:hover, .upload-btn:hover, .google-lens-btn:hover {
+            background: linear-gradient(to bottom, #e8e8e8, #ddd);
+        }
+
+        .submit-btn {
+            background: linear-gradient(to bottom, #4a90e2, #357abd);
+            color: white;
+            border-color: #2e5c87;
+        }
+
+        .submit-btn:hover {
+            background: linear-gradient(to bottom, #357abd, #2e5c87);
+        }
+
+        .submit-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .form-group {
+            margin-bottom: 12px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 11px;
+            color: #333;
+            margin-bottom: 4px;
+            font-weight: bold;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .admin-input {
+            width: 100%;
+            padding: 6px;
+            border: 1px solid #ccc;
+            font-size: 11px;
+            font-family: inherit;
+            border-radius: 2px;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .notice-list {
+            max-height: 250px;
+            overflow-y: auto;
+        }
+
+        .notice-item {
+            background-color: #fff;
+            padding: 10px;
+            margin: 8px 0;
+            border: 1px solid #e0e0e0;
+            border-radius: 3px;
+            position: relative;
+            border-left: 3px solid #4a90e2;
+        }
+
+        .notice-delete {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: #dc3545;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 10px;
+            width: 16px;
+            height: 16px;
+            border-radius: 2px;
+        }
+
+        .notice-delete:hover {
+            background: #c82333;
+        }
+
+        .notice-date {
+            font-size: 10px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .notice-content {
+            font-size: 11px;
+            color: #333;
+            line-height: 1.4;
+        }
+
+        .link-section {
+            background-color: #f0f8ff;
+            padding: 12px;
+            border: 1px solid #4a90e2;
+            margin: 10px 0;
+            border-radius: 3px;
+        }
+
+        .link-section h3 {
+            color: #2e5c87;
+            margin-bottom: 8px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .link-section a {
+            color: #4a90e2;
+            text-decoration: none;
+            display: block;
+            margin: 4px 0;
+            font-size: 11px;
+            padding: 4px 8px;
+            border-radius: 2px;
+        }
+
+        .link-section a:hover {
+            background-color: #e6f3ff;
+            text-decoration: underline;
+        }
+
+        .image-upload-section {
+            background-color: #f8f8f8;
+            padding: 15px;
+            border: 1px solid #ddd;
+            margin: 10px 0;
+            text-align: center;
+            border-radius: 3px;
+        }
+
+        .menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(0,0,0,0.4);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 999;
+        }
+
+        .menu-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .admin-form {
+            display: none;
+            margin-top: 10px;
+        }
+
+        .admin-form.show {
+            display: block;
+        }
+
+        #imagePreview {
+            max-width: 200px;
+            max-height: 200px;
+            margin: 10px;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+        }
+
+        .loading {
+            display: none;
+            font-size: 10px;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .success-message {
+            color: #28a745;
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+            padding: 8px;
+            border-radius: 3px;
+            margin-top: 10px;
+            font-size: 11px;
+        }
+
+        .error-message {
+            color: #dc3545;
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            padding: 8px;
+            border-radius: 3px;
+            margin-top: 10px;
+            font-size: 11px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <button class="hamburger-menu" onclick="toggleSideMenu()">
+                <div class="hamburger-icon">
+                    <div class="hamburger-line"></div>
+                    <div class="hamburger-line"></div>
+                    <div class="hamburger-line"></div>
+                </div>
+            </button>
+            <h1>🚨 중고거래 사기 예방 체크리스트</h1>
+        </div>
+
+        <div class="main-content">
+            <div class="left-panel">
+                <div class="section">
+                    <div class="section-header">거래 방식 의심 신호</div>
+                    <div class="section-content">
+                        <div class="item">
+                            <div class="item-text">
+                                <span class="danger-text">사장님</span>이라는 호칭을 사용한다
+                            </div>
+                        </div>
+                        <div class="item">
+                            <div class="item-text">
+                                지역이 너무 멀다면서 <span class="danger-text">택배 거래</span>로 유도한다
+                            </div>
+                        </div>
+                        <div class="item">
+                            <div class="item-text">
+                                전화번호가 아닌 <span class="danger-text">카카오톡이나 텔레그램</span> 등 다른 메신저로 유도한다
+                            </div>
+                        </div>
+                        <div class="item clickable" onclick="showExample('safesite', this)">
+                            <div class="item-text">
+                                <span class="danger-text">안전거래 사이트 링크</span>를 주고 이쪽에서 결제하라고 한다
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="section-header">추가 결제 유도</div>
+                    <div class="section-content">
+                        <div class="item clickable" onclick="showExample('point', this)">
+                            <div class="item-text">
+                                포인트 써야 한다면서 <span class="danger-text">다른 웹사이트에 등록</span>하라고 유도한다
+                            </div>
+                        </div>
+                        <div class="item">
+                            <div class="item-text">
+                                <span class="danger-text">다른 쇼핑몰 사이트에 등록</span>해달라고 유도한다
+                            </div>
+                        </div>
+                        <div class="item clickable" onclick="showExample('fee', this)">
+                            <div class="item-text">
+                                입금했는데 <span class="danger-text">수수료</span> 어쩌고 하면서 재입금을 유도한다
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="section-header">프로필 의심 신호</div>
+                    <div class="section-content">
+                        <div class="item">
+                            <div class="item-text">
+                                프로필을 누르면 <span class="danger-text">거래 기록 내역이 거의 없다</span>
+                            </div>
+                        </div>
+                        <div class="item">
+                            <div class="item-text">
+                                프로필 보면 <span class="danger-text">가입한 지 얼마되지 않은</span> 이용자다
+                            </div>
+                        </div>
+                        <div class="item clickable" onclick="showExample('profile', this)">
+                            <div class="item-text">
+                                프로필 보면 거래 기록 내역이 많지만 <span class="danger-text">근 몇 년 간 없다가 다시 생겼다</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="section-header">사진 및 인증 의심 신호</div>
+                    <div class="section-content">
+                        <div class="item">
+                            <div class="item-text">
+                                <span class="danger-text">민증으로 인증</span>을 요구한다
+                            </div>
+                        </div>
+                        <div class="item">
+                            <div class="item-text">
+                                사진 날짜가 <span class="danger-text">오늘 찍은 게 아니다</span> (사진 정보에서 확인 가능)
+                            </div>
+                        </div>
+                        <div class="item">
+                            <div class="item-text">
+                                받은 사진이 <span class="danger-text">합성</span>인 것 같다
+                            </div>
+                        </div>
+                        <div class="item">
+                            <div class="item-text">
+                                받은 사진이 <span class="danger-text">도용</span>인 것 같다
+                            </div>
+                        </div>
+                        <div class="image-upload-section">
+                            <h3>사진 확인하기</h3>
+                            <input type="file" id="imageInput" accept="image/*" style="display: none;">
+                            <button class="upload-btn" onclick="document.getElementById('imageInput').click()">사진 업로드</button>
+                            <div id="imageContainer"></div>
+                            <button class="google-lens-btn" id="googleLensBtn" style="display: none;" onclick="searchWithGoogleLens()">구글 렌즈로 검색</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="section-header">사기 신고 카페 확인</div>
+                    <div class="section-content">
+                        <div class="item">
+                            <div class="item-text">
+                                사기 신고 카페에서 <span class="danger-text">해당 이름이 검색</span>된다
+                            </div>
+                        </div>
+                        <div class="link-section">
+                            <h3>사기 신고 카페 검색</h3>
+                            <a href="https://cafe.naver.com/saginara" target="_blank">사기나라 카페</a>
+                            <a href="https://cafe.naver.com/killer1818" target="_blank">킬러1818 카페</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="right-panel" id="rightPanel">
+            <div class="panel-header">
+                <div>상세 정보</div>
+                <button class="close-btn" onclick="closePanel()">×</button>
+            </div>
+            <div class="panel-content" id="panelContent">
+            </div>
+        </div>
+
+        <div class="menu-overlay" id="menuOverlay" onclick="closeSideMenu()"></div>
+        
+        <div class="side-menu" id="sideMenu">
+            <div class="side-menu-header">
+                <div class="side-menu-title">메뉴</div>
+                <button class="side-close-btn" onclick="closeSideMenu()">×</button>
+            </div>
+            
+            <div class="menu-section">
+                <div class="menu-section-header" style="display: flex; justify-content: space-between; align-items: center;">
+                    <span>📢 공지사항</span>
+                    <button class="admin-btn" onclick="toggleAdminForm()" style="margin: 0; padding: 4px 8px; font-size: 10px;">관리</button>
+                </div>
+                <div class="menu-section-content">
+                    <div class="admin-form" id="adminForm">
+                        <input type="password" class="admin-input" id="adminPassword" placeholder="관리자 비밀번호">
+                        <button class="admin-btn" onclick="verifyAdmin()">확인</button>
+                        <div id="noticeManagement" style="display: none;">
+                            <textarea class="admin-input" id="noticeContent" placeholder="공지사항 내용을 입력하세요" rows="3"></textarea>
+                            <button class="admin-btn" onclick="addNotice()">공지사항 추가</button>
+                        </div>
+                    </div>
+                    <div class="notice-list" id="noticeList">
+                        <!-- 공지사항이 여기에 표시됩니다 -->
+                    </div>
+                </div>
+            </div>
+            
+            <div class="menu-section">
+                <div class="menu-section-header">📞 문의하기</div>
+                <div class="menu-section-content">
+                    <form class="contact-form" id="contactForm" onsubmit="submitContact(event)">
+                        <div class="form-group">
+                            <label for="contactEmail">이메일 주소</label>
+                            <input type="email" id="contactEmail" name="email" required placeholder="답변받을 이메일을 입력하세요">
+                        </div>
+                        <div class="form-group">
+                            <label for="contactSubject">제목</label>
+                            <input type="text" id="contactSubject" name="subject" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="contactMessage">내용</label>
+                            <textarea id="contactMessage" name="message" placeholder="사기 신고, 문의사항, 개선 제안 등을 남겨주세요." required></textarea>
+                        </div>
+                        <button type="submit" class="submit-btn" id="submitBtn">문의 보내기</button>
+                        <div class="loading" id="loadingMsg">메일을 전송 중입니다...</div>
+                        <div id="messageResult"></div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 전역 변수들
+        const imageInput = document.getElementById('imageInput');
+        const googleLensBtn = document.getElementById('googleLensBtn');
+        let uploadedImageUrl = null;
+        let notices = [];
+        const ADMIN_PASSWORD = "admin123";
+        const RECEIVER_EMAIL = 'your-email@gmail.com'; // 여기에 본인 이메일 입력
+
+        // 예시 이미지
+        const exampleImages = {
+            timespot: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZGRkIi8+CiAgPHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzk5OSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPuyCiOyLnCDsnbTrr4jsp4A8L3RleHQ+Cjwvc3ZnPg=='
+        };
+
+        // 예시 데이터
+        const examples = {
+            safesite: {
+                title: '가짜 안전거래 사이트',
+                description: '진짜같은 안전거래 사이트 링크를 보내며 결제를 유도합니다. 공식 사이트가 아닌 경우 절대 결제하지 마세요.',
+                image: exampleImages.timespot
+            },
+            point: {
+                title: '포인트 등록 유도',
+                description: '포인트나 적립금을 사용하려면 다른 사이트에 등록해야 한다며 개인정보를 요구하는 사기 수법입니다.',
+                image: exampleImages.timespot
+            },
+            fee: {
+                title: '수수료 재입금 요구',
+                description: '입금 후 수수료나 세금 등의 명목으로 추가 입금을 요구하는 전형적인 사기 수법입니다.',
+                image: exampleImages.timespot
+            },
+            profile: {
+                title: '휴면 후 재활동',
+                description: '예전에는 거래 기록이 많았지만 몇 년간 활동이 없다가 갑자기 활동을 시작한 계정은 해킹되었을 가능성이 높습니다. 이런 계정들은 사기꾼이 탈취해서 사용하는 경우가 많습니다.',
+                image: exampleImages.timespot
+            }
+        };
+
+        // 함수들
+        function showExample(type, element) {
+            const container = document.querySelector('.container');
+            const rightPanel = document.getElementById('rightPanel');
+            const panelContent = document.getElementById('panelContent');
+            
+            if (element.classList.contains('active')) {
+                closePanel();
+                return;
+            }
+            
+            document.querySelectorAll('.item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            element.classList.add('active');
+            
+            const example = examples[type];
+            
+            if (example) {
+                panelContent.innerHTML = `
+                    <div class="example-title">${example.title}</div>
+                    <img src="${example.image}" alt="${example.title}" class="example-image" onerror="this.style.display='none';">
+                    <div class="example-description" style="white-space: pre-line;">${example.description}</div>
+                `;
+                
+                container.classList.add('panel-open');
+                rightPanel.classList.add('show');
+            }
+        }
+
+        function closePanel() {
+            const container = document.querySelector('.container');
+            const rightPanel = document.getElementById('rightPanel');
+            
+            document.querySelectorAll('.item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            container.classList.remove('panel-open');
+            rightPanel.classList.remove('show');
+        }
+
+        function toggleSideMenu() {
+            const sideMenu = document.getElementById('sideMenu');
+            const overlay = document.getElementById('menuOverlay');
+            const hamburger = document.querySelector('.hamburger-menu');
+            
+            sideMenu.classList.add('show');
+            overlay.classList.add('show');
+            hamburger.classList.add('hidden');
+        }
+
+        function closeSideMenu() {
+            const sideMenu = document.getElementById('sideMenu');
+            const overlay = document.getElementById('menuOverlay');
+            const hamburger = document.querySelector('.hamburger-menu');
+            
+            sideMenu.classList.remove('show');
+            overlay.classList.remove('show');
+            hamburger.classList.remove('hidden');
+        }
+
+        function toggleAdminForm() {
+            const adminForm = document.getElementById('adminForm');
+            adminForm.classList.toggle('show');
+        }
+
+        function verifyAdmin() {
+            const password = document.getElementById('adminPassword').value;
+            const noticeManagement = document.getElementById('noticeManagement');
+            
+            if (password === ADMIN_PASSWORD) {
+                noticeManagement.style.display = 'block';
+                alert('관리자 인증이 완료되었습니다.');
+            } else {
+                alert('비밀번호가 올바르지 않습니다.');
+            }
+        }
+
+        function addNotice() {
+            const content = document.getElementById('noticeContent').value.trim();
+            if (!content) {
+                alert('공지사항 내용을 입력해주세요.');
+                return;
+            }
+            
+            const notice = {
+                id: Date.now(),
+                date: new Date().toLocaleDateString('ko-KR'),
+                content: content
+            };
+            
+            notices.unshift(notice);
+            renderNotices();
+            document.getElementById('noticeContent').value = '';
+        }
+
+        function deleteNotice(id) {
+            notices = notices.filter(notice => notice.id !== id);
+            renderNotices();
+        }
+
+        function renderNotices() {
+            const noticeList = document.getElementById('noticeList');
+            
+            if (notices.length === 0) {
+                noticeList.innerHTML = '<div style="text-align: center; color: #999; padding: 20px;">등록된 공지사항이 없습니다.</div>';
+                return;
+            }
+            
+            noticeList.innerHTML = notices.map(notice => `
+                <div class="notice-item">
+                    <button class="notice-delete" onclick="deleteNotice(${notice.id})">×</button>
+                    <div class="notice-date">${notice.date}</div>
+                    <div class="notice-content">${notice.content}</div>
+                </div>
+            `).join('');
+        }
+
+        async function submitContact(event) {
+            event.preventDefault();
+            
+            const submitBtn = document.getElementById('submitBtn');
+            const loadingMsg = document.getElementById('loadingMsg');
+            const messageResult = document.getElementById('messageResult');
+            
+            const formData = new FormData(event.target);
+            const email = formData.get('email');
+            const subject = formData.get('subject');
+            const message = formData.get('message');
+            
+            // 버튼 비활성화 및 로딩 표시
+            submitBtn.disabled = true;
+            loadingMsg.style.display = 'block';
+            messageResult.innerHTML = '';
+            
+            try {
+                // 실제 이메일 발송을 위한 데이터 구성
+                const emailData = {
+                    to_email: RECEIVER_EMAIL,
+                    from_email: email,
+                    subject: `[중고거래 사기예방] ${subject}`,
+                    message: `
+보낸 사람: ${email}
+제목: ${subject}
+전송 시간: ${new Date().toLocaleString('ko-KR')}
+
+내용:
+${message}
+                    `.trim()
+                };
+                
+                // EmailJS 또는 다른 이메일 서비스 사용 시뮬레이션
+                await simulateEmailSend(emailData);
+                
+                messageResult.innerHTML = '<div class="success-message">문의가 성공적으로 전송되었습니다! 빠른 시일 내에 답변드리겠습니다.</div>';
+                event.target.reset();
+                
+                // 3초 후 메뉴 닫기
+                setTimeout(() => {
+                    closeSideMenu();
+                }, 3000);
+                
+            } catch (error) {
+                messageResult.innerHTML = '<div class="error-message">메일 전송에 실패했습니다. 다시 시도해 주세요.</div>';
+                console.error('메일 전송 오류:', error);
+            } finally {
+                submitBtn.disabled = false;
+                loadingMsg.style.display = 'none';
+            }
+        }
+
+        // 이메일 전송 시뮬레이션 함수 (실제 구현에서는 EmailJS 등을 사용)
+        async function simulateEmailSend(emailData) {
+            // 실제 EmailJS 사용 예시:
+            // return emailjs.send('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', emailData);
+            
+            // 현재는 시뮬레이션
+            return new Promise((resolve, reject) => {
+                setTimeout(() => {
+                    if (Math.random() > 0.1) { // 90% 성공률
+                        console.log('이메일 전송 시뮬레이션:', emailData);
+                        resolve();
+                    } else {
+                        reject(new Error('전송 실패'));
+                    }
+                }, 2000);
+            });
+        }
+
+        function searchWithGoogleLens() {
+            if (uploadedImageUrl) {
+                window.open('https://lens.google.com/', '_blank');
+            }
+        }
+
+        // 이벤트 리스너 등록
+        if (imageInput) {
+            imageInput.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        const imageContainer = document.getElementById('imageContainer');
+                        imageContainer.innerHTML = `<img id="imagePreview" src="${e.target.result}" alt="업로드된 이미지">`;
+                        uploadedImageUrl = e.target.result;
+                        googleLensBtn.style.display = 'inline-block';
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+        }
+
+        // 초기 공지사항 렌더링
+        renderNotices();
+    </script>
+</body>
+</html>
