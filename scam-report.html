@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>새로운 사기수법 제보 게시판</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Gulim', '굴림', 'MS Sans Serif', sans-serif;
+            background-color: #f8f8f8;
+            color: #333;
+            line-height: 1.4;
+            font-size: 12px;
+            margin: 0;
+            padding: 15px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            border: 1px solid #ddd;
+        }
+
+        .header {
+            background: linear-gradient(to bottom, #4a90e2, #357abd);
+            color: white;
+            padding: 15px 20px;
+            border-bottom: 2px solid #2e5c87;
+            position: relative;
+        }
+
+        .back-btn {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.3);
+            color: white;
+            cursor: pointer;
+            padding: 6px 12px;
+            border-radius: 3px;
+            font-size: 11px;
+            text-decoration: none;
+        }
+
+        .back-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        .header h1 {
+            text-align: center;
+            font-size: 16px;
+            font-weight: bold;
+            margin: 0;
+        }
+
+        .write-form {
+            background-color: #f9f9f9;
+            border-bottom: 1px dotted #ccc;
+            padding: 15px;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+            align-items: center;
+        }
+
+        .form-row input[type="text"] {
+            flex: 1;
+            padding: 5px 8px;
+            border: 1px solid #ccc;
+            font-size: 12px;
+            font-family: inherit;
+        }
+
+        .submit-btn {
+            background: linear-gradient(to bottom, #4a90e2, #357abd);
+            color: white;
+            border: 1px solid #2e5c87;
+            padding: 5px 15px;
+            cursor: pointer;
+            font-size: 11px;
+            border-radius: 2px;
+            white-space: nowrap;
+        }
+
+        .submit-btn:hover {
+            background: linear-gradient(to bottom, #357abd, #2e5c87);
+        }
+
+        .board-list {
+            background-color: white;
+        }
+
+        .board-header {
+            background-color: #f5f5f5;
+            border-bottom: 1px solid #ddd;
+            padding: 8px 15px;
+            font-size: 11px;
+            color: #666;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .board-item {
+            border-bottom: 1px dotted #eee;
+            padding: 10px 15px;
+            font-size: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .board-item:hover {
+            background-color: #f9f9f9;
+        }
+
+        .board-number {
+            font-weight: bold;
+            color: #666;
+            margin-right: 10px;
+            min-width: 40px;
+        }
+
+        .board-title {
+            flex: 1;
+            color: #333;
+        }
+
+        .board-date {
+            color: #999;
+            font-size: 11px;
+            min-width: 120px;
+            text-align: right;
+        }
+
+        .board-stats {
+            background-color: #f9f9f9;
+            border-top: 1px solid #ddd;
+            padding: 8px 15px;
+            font-size: 11px;
+            color: #666;
+            text-align: center;
+        }
+
+        .no-posts {
+            text-align: center;
+            color: #999;
+            padding: 40px;
+            font-size: 11px;
+        }
+
+        .success-message {
+            background-color: #d4edda;
+            color: #155724;
+            padding: 8px 15px;
+            font-size: 11px;
+            border-bottom: 1px solid #c3e6cb;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <a href="javascript:window.close()" class="back-btn">← 뒤로가기</a>
+            <h1>🚨 새로운 사기수법 제보 게시판</h1>
+        </div>
+
+        <div class="write-form">
+            <form onsubmit="submitReport(event)">
+                <div class="form-row">
+                    <input type="text" id="title" placeholder="제목을 입력하세요..." maxlength="100" required>
+                    <button type="submit" class="submit-btn">📝 제출하기</button>
+                </div>
+            </form>
+        </div>
+
+        <div id="successMessage" style="display: none;"></div>
+
+        <div class="board-list">
+            <div class="board-header">
+                <span>Total: <strong id="totalCount">000003</strong> | Today: <strong id="todayCount">003</strong> | Yesterday: <strong id="yesterdayCount">022</strong> | Max: <strong id="maxCount">003</strong></span>
+            </div>
+            
+            <div id="boardList">
+                <!-- 게시글 목록이 여기에 표시됩니다 -->
+            </div>
+
+            <div class="board-stats">
+                Copyright © 2025 WriteAnything. All rights reserved.
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let reports = [
+            { id: 23, title: "ㅇ", date: "25. 07. 05. 오후 02:40" },
+            { id: 22, title: "ㅇ", date: "25. 07. 05. 오후 02:40" },
+            { id: 21, title: "ㅇ", date: "25. 07. 05. 오후 02:40" },
+            { id: 20, title: "포포포", date: "25. 07. 05. 오후 02:40" },
+            { id: 19, title: "ㅌㅌ", date: "25. 07. 05. 오후 02:40" },
+            { id: 18, title: "ㅍ", date: "25. 07. 05. 오후 02:40" },
+            { id: 17, title: "ㅊ", date: "25. 07. 05. 오후 02:40" },
+            { id: 16, title: "", date: "25. 07. 05. 오후 02:40" }
+        ];
+
+        function formatNumber(num) {
+            return String(num).padStart(6, '0');
+        }
+
+        function getCurrentDateTime() {
+            const now = new Date();
+            const year = String(now.getFullYear()).slice(-2);
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const day = String(now.getDate()).padStart(2, '0');
+            const hours = now.getHours();
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const period = hours >= 12 ? '오후' : '오전';
+            const displayHours = String(hours > 12 ? hours - 12 : (hours === 0 ? 12 : hours)).padStart(2, '0');
+            
+            return `${year}. ${month}. ${day}. ${period} ${displayHours}:${minutes}`;
+        }
+
+        function submitReport(event) {
+            event.preventDefault();
+            
+            const titleInput = document.getElementById('title');
+            const title = titleInput.value.trim();
+            
+            if (!title) {
+                alert('제목을 입력해 주세요.');
+                return;
+            }
+
+            // 새 게시글 추가
+            const newReport = {
+                id: Math.max(...reports.map(r => r.id)) + 1,
+                title: title,
+                date: getCurrentDateTime()
+            };
+            
+            reports.unshift(newReport);
+            renderReports();
+            updateStats();
+            
+            // 성공 메시지 표시
+            const successMsg = document.getElementById('successMessage');
+            successMsg.innerHTML = '<div class="success-message">제보가 성공적으로 등록되었습니다!</div>';
+            successMsg.style.display = 'block';
+            
+            setTimeout(() => {
+                successMsg.style.display = 'none';
+            }, 3000);
+            
+            // 폼 초기화
+            titleInput.value = '';
+        }
+
+        function renderReports() {
+            const boardList = document.getElementById('boardList');
+            
+            if (reports.length === 0) {
+                boardList.innerHTML = '<div class="no-posts">등록된 제보가 없습니다.</div>';
+                return;
+            }
+            
+            boardList.innerHTML = reports.map(report => `
+                <div class="board-item">
+                    <div style="display: flex; align-items: center;">
+                        <span class="board-number">No.${report.id}</span>
+                        <span class="board-title">${report.title || '(제목 없음)'}</span>
+                    </div>
+                    <span class="board-date">${report.date}</span>
+                </div>
+            `).join('');
+        }
+
+        function updateStats() {
+            const total = reports.length;
+            const today = 3; // 고정값 (시뮬레이션)
+            const yesterday = 22; // 고정값 (시뮬레이션)
+            const max = Math.max(today, yesterday);
+            
+            document.getElementById('totalCount').textContent = formatNumber(total);
+            document.getElementById('todayCount').textContent = String(today).padStart(3, '0');
+            document.getElementById('yesterdayCount').textContent = String(yesterday).padStart(3, '0');
+            document.getElementById('maxCount').textContent = String(max).padStart(3, '0');
+        }
+
+        // 페이지 로드 시 초기화
+        document.addEventListener('DOMContentLoaded', function() {
+            renderReports();
+            updateStats();
+        });
+    </script>
+</body>
+</html>
