@@ -89,6 +89,8 @@ body {
   font-size: 11px;
   border-radius: 2px;
   white-space: nowrap;
+  display: flex;
+  align-items: center;
 }
 
 .submit-btn:hover {
@@ -309,6 +311,7 @@ body {
 .form-row:last-child {
     justify-content: flex-end;    /* 오른쪽 정렬 */
     margin-top: 10px;            /* 내용 박스와 간격 */
+    align-items: stretch;
 }
 
 .form-row:last-child #password {
