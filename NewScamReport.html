@@ -89,7 +89,7 @@
                 const { data, error } = await supabase
                     .from('newreports')
                     .select('*')
-                    .order('created_at', { ascending: false });
+                    .order('id', { ascending: false });
                 
                 if (error) {
                     console.error('Supabase 오류:', error);
