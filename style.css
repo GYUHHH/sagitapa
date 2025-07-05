@@ -232,12 +232,17 @@ body {
   z-index: 1000;
 }
 
+.modal.show {
+  display: flex;
+}
+
 .modal-content {
   background: white;
   padding: 20px;
   border-radius: 5px;
   width: 300px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  margin: auto;
 }
 
 .modal-header {
