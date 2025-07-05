@@ -798,26 +798,14 @@
             </div>
             
             <div class="menu-section">
-                <div class="menu-section-header notice-header" onclick="toggleMenuSection('notice')" id="noticeHeader">
-                    <div style="display: flex; align-items: center;">
-                        <span>📢 공지사항</span>
-                        <button class="admin-btn" onclick="event.stopPropagation(); showAdminModal()" style="margin-left: 10px; padding: 4px 8px; font-size: 10px;">관리</button>
-                    </div>
-                    <span class="toggle-arrow">▼</span>
-                </div>
-                <div class="menu-section-content" id="noticeContent">
-                    <div class="notice-list" id="noticeList">
-                        <!-- 공지사항이 여기에 표시됩니다 -->
-                    </div>
-                </div>
-            </div>
-            
-            <div class="menu-section">
                 <div class="menu-section-header board-header" onclick="toggleMenuSection('board')" id="boardHeader">
                     <span>📋 게시판</span>
                     <span class="toggle-arrow">▼</span>
                 </div>
                 <div class="menu-section-content" id="boardContent">
+                    <div style="padding: 8px 0; border-bottom: 1px solid #ddd; margin-bottom: 8px;">
+                        <span style="color: #4a90e2; font-weight: bold;">공지사항</span>
+                    </div>
                     <div class="board-links">
                         <a href="#" class="board-link" onclick="alert('사기 제보 게시판 준비 중입니다.')">사기를 제보합니다</a>
                         <a href="scam-report.html" class="board-link">새로운 사기 수법을 제보합니다</a>
