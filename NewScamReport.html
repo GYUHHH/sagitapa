@@ -17,11 +17,13 @@
             <form onsubmit="submitReport(event)">
                 <div class="form-row">
                     <textarea id="title" placeholder="내용을 입력하세요..." maxlength="100" required rows="1"></textarea>
-                    <input type="password" id="password" placeholder="비밀번호" maxlength="20" required>
-                    <button type="submit" class="submit-btn" id="submitBtn">📝 등록하기</button>
-                </div>
-            </form>
-        </div>
+            </div>
+            <div class="form-row">
+                <input type="password" id="password" placeholder="비밀번호" maxlength="20" required>
+                <button type="submit" class="submit-btn" id="submitBtn">📝 제출하기</button>
+            </div>
+        </form>
+    </div>
 
         <div id="successMessage" style="display: none;"></div>
 
