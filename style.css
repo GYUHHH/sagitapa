@@ -297,3 +297,11 @@ body {
     vertical-align: top;
     box-sizing: border-box;
 }
+
+.form-row:first-child {
+    margin-bottom: 10px;
+}
+
+.form-row:first-child #title {
+    width: 100%;
+}
