@@ -285,7 +285,7 @@ body {
 
 #title {
     flex: 1;
-    resize: none;
+    resize: both;
     overflow: hidden;
     min-height: 26px;           /* 더 작게 */
     height: 26px;
