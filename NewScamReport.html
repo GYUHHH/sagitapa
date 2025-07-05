@@ -43,7 +43,7 @@
         <div class="modal-content">
             <div class="modal-header">게시글 수정</div>
             <div class="modal-body">
-                <input type="text" id="editTitle" class="modal-input" placeholder="수정할 제목">
+                <textarea id="editTitle" class="modal-input" placeholder="수정할 제목" rows="3"></textarea>
                 <input type="password" id="editPassword" class="modal-input" placeholder="비밀번호">
             </div>
             <div class="modal-footer">
@@ -192,7 +192,7 @@
                 <div class="board-item">
                     <div style="display: flex; align-items: center; width: 100%;">
                         <span class="board-number">No.${report.id || '?'}</span>
-                        <span class="board-title">${report.title || '(제목 없음)'}</span>
+                        <span class="board-title" style="white-space: pre-wrap;>${report.title || '(제목 없음)'}</span>
                         <div class="board-actions">
                             <button class="action-btn edit-btn" onclick="openEditModal(${report.id}, '${report.title}')">수정</button>
                             <button class="action-btn delete-btn" onclick="openDeleteModal(${report.id})">삭제</button>
