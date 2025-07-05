@@ -194,7 +194,7 @@
                         <span class="board-number">No.${report.id || '?'}</span>
                         <span class="board-title" style="white-space: pre-wrap;">${report.title || '(제목 없음)'}</span>
                         <div class="board-actions">
-                            <button class="action-btn edit-btn" onclick="openEditModal(${report.id}, '${report.title}')">수정</button>
+                            <button class="action-btn edit-btn" data-id="${report.id}" data-title="${(report.title || '').replace(/"/g, '&quot;')}" onclick="openEditModalSafe(this)">수정</button>
                             <button class="action-btn delete-btn" onclick="openDeleteModal(${report.id})">삭제</button>
                         </div>
                     </div>
@@ -208,6 +208,12 @@
             document.getElementById('editTitle').value = title.replace(/'/g, "");
             document.getElementById('editPassword').value = '';
             document.getElementById('editModal').style.display = 'flex';
+        }
+
+        function openEditModalSafe(button) {
+            const id = button.getAttribute('data-id');
+            const title = button.getAttribute('data-title').replace(/&quot;/g, '"');
+            openEditModal(id, title);
         }
 
         function openDeleteModal(id) {
