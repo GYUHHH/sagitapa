@@ -25,9 +25,6 @@
         <div id="successMessage" style="display: none;"></div>
 
         <div class="board-list">
-            <div class="board-header">
-                <span>Total: <strong id="totalCount">000003</strong> | Today: <strong id="todayCount">003</strong> | Yesterday: <strong id="yesterdayCount">022</strong> | Max: <strong id="maxCount">003</strong></span>
-            </div>
             
             <div id="boardList">
                 <!-- 게시글 목록이 여기에 표시됩니다 -->
@@ -88,7 +85,6 @@
             
             reports.unshift(newReport);
             renderReports();
-            updateStats();
             
             // 성공 메시지 표시
             const successMsg = document.getElementById('successMessage');
@@ -122,22 +118,9 @@
             `).join('');
         }
 
-        function updateStats() {
-            const total = reports.length;
-            const today = 3; // 고정값 (시뮬레이션)
-            const yesterday = 22; // 고정값 (시뮬레이션)
-            const max = Math.max(today, yesterday);
-            
-            document.getElementById('totalCount').textContent = formatNumber(total);
-            document.getElementById('todayCount').textContent = String(today).padStart(3, '0');
-            document.getElementById('yesterdayCount').textContent = String(yesterday).padStart(3, '0');
-            document.getElementById('maxCount').textContent = String(max).padStart(3, '0');
-        }
-
         // 페이지 로드 시 초기화
         document.addEventListener('DOMContentLoaded', function() {
             renderReports();
-            updateStats();
         });
     </script>
 </body>
