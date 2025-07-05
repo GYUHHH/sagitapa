@@ -315,6 +315,6 @@ body {
 }
 
 .form-row:last-child #password {
-    width: 100px;                /* 비밀번호 입력창 너비 고정 */
-    margin-right: 10px;          /* 제출 버튼과 간격 */
+    width: 80px;                
+    margin-right: 5px;          /* 제출 버튼과 간격 */
 }
