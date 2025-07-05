@@ -305,3 +305,13 @@ body {
 .form-row:first-child #title {
     width: 100%;
 }
+
+.form-row:last-child {
+    justify-content: flex-end;    /* 오른쪽 정렬 */
+    margin-top: 10px;            /* 내용 박스와 간격 */
+}
+
+.form-row:last-child #password {
+    width: 100px;                /* 비밀번호 입력창 너비 고정 */
+    margin-right: 10px;          /* 제출 버튼과 간격 */
+}
