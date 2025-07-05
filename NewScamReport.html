@@ -10,7 +10,7 @@
     <div class="container">
         <div class="header">
             <a href="index.html" class="back-btn">🏠 홈으로</a>
-            <h1>새로운 사기수법을 제보합니다</h1>
+            <h1>새로운 사기수법 제보 게시판</h1>
         </div>
 
         <div class="write-form">
@@ -52,7 +52,7 @@
                 console.log('데이터 로딩 시작...');
                 
                 const { data, error } = await supabase
-                    .from('reports')
+                    .from('newreports')
                     .select('*')
                     .order('created_at', { ascending: false });
                 
@@ -114,7 +114,7 @@
                 
                 // Supabase에 데이터 저장
                 const { data, error } = await supabase
-                    .from('reports')
+                    .from('newreports')
                     .insert([
                         {
                             title: title,
@@ -185,9 +185,9 @@
 
         // 실시간 업데이트 (다른 사용자가 추가한 게시글 실시간 반영)
         supabase
-            .channel('reports_channel')
+            .channel('newreports_channel')
             .on('postgres_changes', 
-                { event: 'INSERT', schema: 'public', table: 'reports' }, 
+                { event: 'INSERT', schema: 'public', table: 'newreports' }, 
                 (payload) => {
                     console.log('새 게시글 실시간 수신:', payload.new);
                     // 새 게시글을 맨 앞에 추가
