@@ -30,7 +30,7 @@ body {
 .header {
   background: linear-gradient(to bottom, #4a90e2, #357abd);
   color: white;
-  padding: 20px 20px;
+  padding: 15px 20px;
   border-bottom: 2px solid #2e5c87;
   position: relative;
 }
@@ -825,7 +825,7 @@ body {
   .header {
     width: 100%;
     margin: 0;
-    padding: 12px 15px;
+    padding: 16px 15px;
     box-sizing: border-box;
   }
   
