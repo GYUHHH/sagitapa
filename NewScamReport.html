@@ -26,15 +26,6 @@
 
         <div id="successMessage" style="display: none;"></div>
 
-        <!-- 검색 기능 -->
-        <div class="search-section">
-            <div class="search-box">
-                <input type="text" id="searchInput" placeholder="제보 내용 검색..." maxlength="50">
-                <button class="search-btn" onclick="searchReports()">🔍 검색</button>
-                <button class="reset-btn" onclick="resetSearch()">초기화</button>
-            </div>
-        </div>
-
         <div class="board-list">
             <div id="boardList">
                 <div class="loading">게시글을 불러오는 중...</div>
@@ -44,6 +35,14 @@
         <!-- 페이지네이션 -->
         <div class="pagination" id="pagination">
             <!-- 페이지 버튼들이 여기에 동적으로 생성됩니다 -->
+        </div>
+
+        <!-- 검색 기능 -->
+        <div class="search-section">
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="검색..." maxlength="50">
+                <button class="search-btn" onclick="searchReports()">🔍 검색</button>
+            </div>
         </div>
     </div>
 
@@ -75,6 +74,10 @@
                 <button class="modal-btn primary" onclick="confirmDelete()">삭제</button>
             </div>
         </div>
+    </div>
+
+    <div class="footer">
+        <p>Copyright © 2025 sagitapa. All rights reserved.</p>
     </div>
 
     <!-- Supabase JavaScript SDK -->
@@ -141,15 +144,6 @@
             renderPagination();
         }
 
-        // 검색 초기화
-        function resetSearch() {
-            document.getElementById('searchInput').value = '';
-            filteredReports = [...reports];
-            currentPage = 1;
-            renderReports();
-            renderPagination();
-        }
-
         // 엔터 키로 검색
         document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('searchInput').addEventListener('keypress', function(e) {
@@ -171,16 +165,11 @@
             const totalPages = Math.ceil(filteredReports.length / itemsPerPage);
             const paginationEl = document.getElementById('pagination');
             
-            if (totalPages <= 1) {
-                paginationEl.innerHTML = '';
-                return;
-            }
-            
             let paginationHTML = '';
             
             // 이전 버튼
             if (currentPage > 1) {
-                paginationHTML += `<button class="page-btn" onclick="changePage(${currentPage - 1})">‹ 이전</button>`;
+                paginationHTML += `<button class="page-btn" onclick="changePage(${currentPage - 1})">‹</button>`;
             }
             
             // 페이지 번호들
@@ -194,7 +183,12 @@
             
             // 다음 버튼
             if (currentPage < totalPages) {
-                paginationHTML += `<button class="page-btn" onclick="changePage(${currentPage + 1})">다음 ›</button>`;
+                paginationHTML += `<button class="page-btn" onclick="changePage(${currentPage + 1})">›</button>`;
+            }
+            
+            // 페이지가 하나도 없으면 빈 페이지네이션 표시
+            if (totalPages === 0) {
+                paginationHTML = '<button class="page-btn active">1</button>';
             }
             
             paginationEl.innerHTML = paginationHTML;
@@ -543,8 +537,5 @@
             }
         }
     </script>
-    <div class="footer">
-        <p>Copyright © 2025 sagitapa. All rights reserved.</p>
-    </div>
 </body>
 </html>
