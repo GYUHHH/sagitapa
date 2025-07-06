@@ -827,3 +827,70 @@ body {
 .footer a:hover {
   text-decoration: underline;
 }
+
+/* 이미지 슬라이더 스타일 */
+.image-slider {
+    margin: 20px 0;
+}
+
+.slider-container {
+    position: relative;
+    width: 100%;
+    height: 300px;
+    overflow: hidden;
+    border-radius: 0;
+    background-color: #f5f5f5;
+}
+
+.slider-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.slider-image.active {
+    opacity: 1;
+}
+
+.slider-controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 10px;
+    padding: 10px;
+}
+
+.slider-btn {
+    background: #4a90e2;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 0;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+}
+
+.slider-btn:hover {
+    background: #357abd;
+}
+
+.slider-indicator {
+    font-size: 14px;
+    color: #666;
+    font-weight: 500;
+}
+
+.slider-instruction {
+    text-align: center;
+    font-size: 12px;
+    color: #999;
+    margin-top: 8px;
+    font-style: italic;
+}
