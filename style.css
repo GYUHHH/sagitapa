@@ -1,3 +1,4 @@
+/* ===== 기본 설정 ===== */
 * {
   margin: 0;
   padding: 0;
@@ -10,17 +11,16 @@ body {
   color: #333;
   line-height: 1.4;
   font-size: 12px;
-  margin: 0;
-  padding: 0;
+  overflow-x: hidden;
 }
 
+/* ===== 레이아웃 ===== */
 .container {
   max-width: 1000px;
   margin: 0 auto;
   background-color: #ffffff;
   border: 1px solid #ddd;
-  margin-left: auto;
-  margin-right: auto;
+  overflow-x: hidden;
 }
 
 .header {
@@ -30,14 +30,20 @@ body {
   border-bottom: 2px solid #2e5c87;
   position: relative;
   width: 100vw;
-  margin: 0;
   margin-left: calc(-50vw + 50%);
   margin-right: calc(-50vw + 50%);
-  left: 0;
-  right: 0;
-  box-sizing: border-box;
 }
 
+.header h1 {
+  padding: 0 15px;
+  text-align: center;
+  font-size: 16px;
+  font-weight: bold;
+  margin: 0;
+  width: 100%;
+}
+
+/* ===== 뒤로가기 버튼 ===== */
 .back-btn {
   position: absolute;
   left: 15px;
@@ -51,23 +57,13 @@ body {
   border-radius: 3px;
   font-size: 11px;
   text-decoration: none;
-  display: block; 
-  visibility: visible; 
 }
 
 .back-btn:hover {
   background: rgba(255, 255, 255, 0.3);
 }
 
-.header h1 {
-  padding: 0 15px;
-  text-align: center;
-  font-size: 16px;
-  font-weight: bold;
-  margin: 0;
-  width: 100%;
-}
-
+/* ===== 글쓰기 폼 ===== */
 .write-form {
   background-color: #f9f9f9;
   border-bottom: 1px dotted #ccc;
@@ -81,12 +77,48 @@ body {
   align-items: center;
 }
 
-.form-row input[type="text"] {
-  flex: 1;
+.form-row:first-child {
+  margin-bottom: 10px;
+}
+
+.form-row:last-child {
+  justify-content: flex-end;
+  margin-top: 10px;
+  align-items: stretch;
+}
+
+.form-row input[type="text"],
+.form-row input[type="password"] {
   padding: 5px 8px;
   border: 1px solid #ccc;
   font-size: 12px;
   font-family: inherit;
+}
+
+#title {
+  flex: 1;
+  resize: both;
+  overflow: hidden;
+  min-height: 64px;
+  height: 64px;
+  line-height: 1.2;
+  padding: 4px 8px;
+  border: 1px solid #ccc;
+  font-size: 12px;
+  font-family: inherit;
+  vertical-align: top;
+  word-wrap: break-word;
+  word-break: keep-all;
+  overflow-wrap: break-word;
+}
+
+.form-row:first-child #title {
+  width: 100%;
+}
+
+#password {
+  width: 80px;
+  margin-right: 5px;
 }
 
 .submit-btn {
@@ -106,6 +138,7 @@ body {
   background: linear-gradient(to bottom, #357abd, #2e5c87);
 }
 
+/* ===== 게시판 목록 ===== */
 .board-list {
   background-color: white;
 }
@@ -144,6 +177,9 @@ body {
 .board-title {
   flex: 1;
   color: #333;
+  word-wrap: break-word;
+  word-break: keep-all;
+  overflow-wrap: break-word;
 }
 
 .board-date {
@@ -151,53 +187,6 @@ body {
   font-size: 11px;
   min-width: 120px;
   text-align: right;
-}
-
-.board-stats {
-  background-color: #f9f9f9;
-  border-top: 1px solid #ddd;
-  padding: 8px 15px;
-  font-size: 11px;
-  color: #666;
-  text-align: center;
-}
-
-.no-posts {
-  text-align: center;
-  color: #999;
-  padding: 40px;
-  font-size: 11px;
-}
-
-.success-message {
-  background-color: #d4edda;
-  color: #155724;
-  padding: 8px 15px;
-  font-size: 11px;
-  border-bottom: 1px solid #c3e6cb;
-}
-/* 추가 스타일 */
-.form-row {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 10px;
-  align-items: center;
-}
-
-.form-row input[type="text"],
-.form-row input[type="password"] {
-  padding: 5px 8px;
-  border: 1px solid #ccc;
-  font-size: 12px;
-  font-family: inherit;
-}
-
-#title {
-  flex: 1;
-}
-
-#password {
-  width: 100px;
 }
 
 .board-actions {
@@ -228,6 +217,23 @@ body {
   color: #dc3545;
 }
 
+.board-stats {
+  background-color: #f9f9f9;
+  border-top: 1px solid #ddd;
+  padding: 8px 15px;
+  font-size: 11px;
+  color: #666;
+  text-align: center;
+}
+
+.no-posts {
+  text-align: center;
+  color: #999;
+  padding: 40px;
+  font-size: 11px;
+}
+
+/* ===== 모달 ===== */
 .modal {
   position: fixed;
   top: 0;
@@ -299,83 +305,42 @@ body {
   padding: 6px;
   border: 1px solid #ccc;
   font-size: 12px;
-  margin-bottom: 10px;             
-  font-family: inherit;      
-  line-height: 1.2; 
+  margin-bottom: 10px;
+  font-family: inherit;
+  line-height: 1.2;
   box-sizing: border-box;
-}
-
-.modal-input[type="password"] {
-    min-height: auto;
-}
-
-.modal-input:not([type="password"]) {
-    resize: vertical;
-    min-height: 60px;
-}
-
-#title {
-    flex: 1;
-    resize: both;
-    overflow: hidden;
-    min-height: 64px;           /* 더 작게 */
-    height: 64px;
-    line-height: 1.2;
-    padding: 4px 8px;           /* 패딩도 조금 줄임 */
-    border: 1px solid #ccc;
-    font-size: 12px;
-    font-family: inherit;
-    vertical-align: top;
-    box-sizing: border-box;
-}
-
-.form-row:first-child {
-    margin-bottom: 10px;
-}
-
-.form-row:first-child #title {
-    width: 100%;
-}
-
-.form-row:last-child {
-    justify-content: flex-end;    /* 오른쪽 정렬 */
-    margin-top: 10px;            /* 내용 박스와 간격 */
-    align-items: stretch;
-}
-
-.form-row:last-child #password {
-    width: 80px;                
-    margin-right: 5px;          /* 제출 버튼과 간격 */
-}
-
-/* 모바일 최적화 */
-body {
-  overflow-x: hidden;
-}
-
-.container {
-  overflow-x: hidden;
-}
-
-/* 텍스트 줄바꿈 개선 */
-.board-title, .modal-input, #title {
   word-wrap: break-word;
   word-break: keep-all;
   overflow-wrap: break-word;
 }
 
-/* 모바일 반응형 */
+.modal-input[type="password"] {
+  min-height: auto;
+}
+
+.modal-input:not([type="password"]) {
+  resize: vertical;
+  min-height: 60px;
+}
+
+/* ===== 메시지 ===== */
+.success-message {
+  background-color: #d4edda;
+  color: #155724;
+  padding: 8px 15px;
+  font-size: 11px;
+  border-bottom: 1px solid #c3e6cb;
+}
+
+/* ===== 모바일 반응형 ===== */
 @media (max-width: 768px) {
   .header {
-    width: 100vw;
-    margin-left: calc(-50vw + 50%);
-    padding: 10px;
+    padding: 10px 0;
   }
   
   .header h1 {
     font-size: 14px;
-    padding: 0;
-    text-align: center;
+    padding: 0 15px;
   }
   
   .back-btn {
@@ -384,7 +349,7 @@ body {
     font-size: 10px;
   }
   
-  /* 글쓰기 폼 모바일 최적화 */
+  /* 글쓰기 폼 */
   .write-form {
     padding: 10px;
   }
@@ -405,12 +370,12 @@ body {
     width: 100% !important;
     height: 50px;
     min-height: 50px;
-    font-size: 14px !important; /* iOS 확대 방지 */
+    font-size: 14px !important;
   }
   
   #password {
     width: 70px !important;
-    font-size: 14px !important; /* iOS 확대 방지 */
+    font-size: 14px !important;
     height: 36px;
     padding: 0 8px;
   }
@@ -422,7 +387,12 @@ body {
     height: 36px;
   }
   
-  /* 게시판 목록 모바일 최적화 */
+  /* 게시판 목록 */
+  .board-header {
+    padding: 6px 10px;
+    font-size: 10px;
+  }
+  
   .board-item {
     flex-direction: column;
     align-items: flex-start;
@@ -447,11 +417,6 @@ body {
     color: #666;
   }
   
-  .board-header {
-    padding: 6px 10px;
-    font-size: 10px;
-  }
-  
   .board-actions {
     margin-left: 0;
     margin-top: 5px;
@@ -462,7 +427,7 @@ body {
     padding: 3px 6px;
   }
   
-  /* 모달 모바일 최적화 */
+  /* 모달 */
   .modal-content {
     width: 90vw;
     max-width: 300px;
@@ -474,7 +439,7 @@ body {
   }
   
   .modal-input {
-    font-size: 14px !important; /* iOS 확대 방지 */
+    font-size: 14px !important;
     padding: 8px;
   }
   
@@ -485,18 +450,10 @@ body {
   }
 }
 
-/* 더 작은 화면 */
+/* ===== 더 작은 화면 ===== */
 @media (max-width: 480px) {
   .header h1 {
     font-size: 12px;
-  }
-  
-  .board-title {
-    font-size: 10px;
-  }
-  
-  .board-date {
-    font-size: 9px;
   }
   
   .write-form {
@@ -511,5 +468,13 @@ body {
   .submit-btn {
     font-size: 11px;
     padding: 6px 10px;
+  }
+  
+  .board-title {
+    font-size: 10px;
+  }
+  
+  .board-date {
+    font-size: 9px;
   }
 }
