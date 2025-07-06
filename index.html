@@ -112,13 +112,6 @@
                                 받은 사진이 <span class="danger-text">도용</span>인 것 같나요?
                             </div>
                         </div>
-                        <div class="image-upload-section">
-                            <h3>사진 확인하기</h3>
-                            <input type="file" id="imageInput" accept="image/*" style="display: none;">
-                            <button class="upload-btn" onclick="document.getElementById('imageInput').click()">사진 업로드</button>
-                            <div id="imageContainer"></div>
-                            <button class="google-lens-btn" id="googleLensBtn" style="display: none;" onclick="searchWithGoogleLens()">구글 렌즈로 검색</button>
-                        </div>
                     </div>
                 </div>
 
@@ -306,7 +299,7 @@
             },
             stolen_photo: {
                 title: '도용 사진 의심',
-                description: '인터넷에서 가져온 사진을 사용할 수 있습니다. 구글 이미지 검색으로 다른 곳에서 사진을 가져왔는지 확인해보세요.',
+                description: '인터넷에서 가져온 사진을 사용할 수 있습니다. 구글 이미지 검색으로 다른 곳에서 사진을 가져왔는지 확인해보세요.<br><br><div class="image-upload-section"><h3>사진 확인하기</h3><input type="file" id="imageInput" accept="image/*" style="display: none;"><button class="upload-btn" onclick="document.getElementById(\'imageInput\').click()">사진 업로드</button><div id="imageContainer"></div><button class="google-lens-btn" id="googleLensBtn" style="display: none;" onclick="searchWithGoogleLens()">구글 렌즈로 검색</button></div>',
                 image: exampleImages.timespot
             },
             scam_search: {
@@ -349,6 +342,28 @@
                 
                 container.classList.add('panel-open');
                 rightPanel.classList.add('show');
+                
+                // 사진 업로드 기능이 포함된 경우 이벤트 리스너 다시 등록
+                if (type === 'stolen_photo') {
+                    const newImageInput = document.getElementById('imageInput');
+                    const newGoogleLensBtn = document.getElementById('googleLensBtn');
+                    
+                    if (newImageInput) {
+                        newImageInput.addEventListener('change', function(e) {
+                            const file = e.target.files[0];
+                            if (file) {
+                                const reader = new FileReader();
+                                reader.onload = function(e) {
+                                    const imageContainer = document.getElementById('imageContainer');
+                                    imageContainer.innerHTML = `<img id="imagePreview" src="${e.target.result}" alt="업로드된 이미지">`;
+                                    uploadedImageUrl = e.target.result;
+                                    newGoogleLensBtn.style.display = 'inline-block';
+                                };
+                                reader.readAsDataURL(file);
+                            }
+                        });
+                    }
+                }
             }
         }
 
@@ -563,23 +578,6 @@ ${message}
             if (uploadedImageUrl) {
                 window.open('https://lens.google.com/', '_blank');
             }
-        }
-
-        // 이벤트 리스너 등록
-        if (imageInput) {
-            imageInput.addEventListener('change', function(e) {
-                const file = e.target.files[0];
-                if (file) {
-                    const reader = new FileReader();
-                    reader.onload = function(e) {
-                        const imageContainer = document.getElementById('imageContainer');
-                        imageContainer.innerHTML = `<img id="imagePreview" src="${e.target.result}" alt="업로드된 이미지">`;
-                        uploadedImageUrl = e.target.result;
-                        googleLensBtn.style.display = 'inline-block';
-                    };
-                    reader.readAsDataURL(file);
-                }
-            });
         }
 
         // 초기 공지사항 렌더링
