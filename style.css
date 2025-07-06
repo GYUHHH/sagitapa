@@ -1,4 +1,4 @@
-g* {
+* {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
@@ -337,4 +337,166 @@ body {
 .form-row:last-child #password {
     width: 80px;                
     margin-right: 5px;          /* 제출 버튼과 간격 */
+}
+
+/* 모바일 최적화 */
+body {
+  overflow-x: hidden;
+}
+
+.container {
+  overflow-x: hidden;
+}
+
+/* 텍스트 줄바꿈 개선 */
+.board-title, .modal-input, #title {
+  word-wrap: break-word;
+  word-break: keep-all;
+  overflow-wrap: break-word;
+}
+
+/* 모바일 반응형 */
+@media (max-width: 768px) {
+  .header {
+    width: 100vw;
+    margin-left: calc(-50vw + 50%);
+    padding: 10px;
+  }
+  
+  .header h1 {
+    font-size: 14px;
+    padding-left: 50px; /* 뒤로가기 버튼 공간 */
+  }
+  
+  .back-btn {
+    left: 10px;
+    padding: 4px 8px;
+    font-size: 10px;
+  }
+  
+  /* 글쓰기 폼 모바일 최적화 */
+  .write-form {
+    padding: 10px;
+  }
+  
+  .form-row {
+    flex-direction: column;
+    gap: 8px;
+    align-items: stretch;
+  }
+  
+  .form-row:last-child {
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+  }
+  
+  #title {
+    width: 100% !important;
+    height: 50px;
+    min-height: 50px;
+    font-size: 14px !important; /* iOS 확대 방지 */
+  }
+  
+  #password {
+    width: 70px !important;
+    font-size: 14px !important; /* iOS 확대 방지 */
+  }
+  
+  .submit-btn {
+    padding: 8px 12px;
+    font-size: 12px;
+    min-height: 36px;
+  }
+  
+  /* 게시판 목록 모바일 최적화 */
+  .board-item {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 8px 10px;
+    gap: 4px;
+  }
+  
+  .board-number {
+    margin-right: 0;
+    min-width: auto;
+  }
+  
+  .board-title {
+    font-size: 11px;
+    line-height: 1.3;
+  }
+  
+  .board-date {
+    font-size: 10px;
+    text-align: left;
+    min-width: auto;
+    color: #666;
+  }
+  
+  .board-header {
+    padding: 6px 10px;
+    font-size: 10px;
+  }
+  
+  .board-actions {
+    margin-left: 0;
+    margin-top: 5px;
+  }
+  
+  .action-btn {
+    font-size: 9px;
+    padding: 3px 6px;
+  }
+  
+  /* 모달 모바일 최적화 */
+  .modal-content {
+    width: 90vw;
+    max-width: 300px;
+    margin: 0 15px;
+    position: relative;
+    top: auto;
+    left: auto;
+    transform: none;
+  }
+  
+  .modal-input {
+    font-size: 14px !important; /* iOS 확대 방지 */
+    padding: 8px;
+  }
+  
+  .modal-btn {
+    padding: 10px 12px;
+    font-size: 12px;
+    min-height: 40px;
+  }
+}
+
+/* 더 작은 화면 */
+@media (max-width: 480px) {
+  .header h1 {
+    font-size: 12px;
+  }
+  
+  .board-title {
+    font-size: 10px;
+  }
+  
+  .board-date {
+    font-size: 9px;
+  }
+  
+  .write-form {
+    padding: 8px;
+  }
+  
+  #title {
+    height: 45px;
+    min-height: 45px;
+  }
+  
+  .submit-btn {
+    font-size: 11px;
+    padding: 6px 10px;
+  }
 }
