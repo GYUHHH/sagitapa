@@ -894,3 +894,98 @@ body {
     margin-top: 8px;
     font-style: italic;
 }
+
+.scam-markets-section {
+    background: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    padding: 15px;
+    margin: 15px 0;
+}
+
+.scam-markets-header {
+    font-weight: bold;
+    font-size: 14px;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.scam-markets-list {
+    max-height: 300px;
+    overflow-y: auto;
+    margin-bottom: 15px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.market-item {
+    display: inline-flex;
+    align-items: center;
+    background: #dc3545;
+    color: white;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 11px;
+    gap: 5px;
+}
+
+.market-name {
+    font-weight: 500;
+}
+
+.delete-market-btn {
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+    padding: 0;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.delete-market-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.add-market-section {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.add-market-section input {
+    flex: 1;
+    padding: 6px 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 12px;
+}
+
+.add-market-btn {
+    background: #28a745;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 11px;
+    white-space: nowrap;
+}
+
+.add-market-btn:hover {
+    background: #218838;
+}
+
+.no-markets {
+    text-align: center;
+    color: #666;
+    font-style: italic;
+    padding: 20px;
+}
