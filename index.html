@@ -575,9 +575,10 @@ ${message}
         }
 
         function searchWithGoogleLens() {
-            if (uploadedImageUrl) {
-                const searchUrl = `https://www.google.com/searchbyimage?image_url=${encodeURIComponent(uploadedImageUrl)}`;
-                window.open(searchUrl, '_blank');
+             if (uploadedImageUrl) {
+                 // 구글 이미지 검색 페이지를 열고 수동 업로드 안내
+                 window.open('https://images.google.com/', '_blank');
+                 alert('구글 이미지 검색이 열렸습니다.\n카메라 아이콘(📷)을 클릭해서 이미지를 직접 업로드하세요.');
             }
         }
 
