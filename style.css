@@ -403,12 +403,15 @@ body {
   #password {
     width: 70px !important;
     font-size: 14px !important; /* iOS 확대 방지 */
+    height: 36px;
+    padding: 0 8px;
   }
   
   .submit-btn {
     padding: 8px 12px;
     font-size: 12px;
     min-height: 36px;
+    height: 36px;
   }
   
   /* 게시판 목록 모바일 최적화 */
