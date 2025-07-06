@@ -250,7 +250,7 @@
             },
             shopping: {
                 title: '쇼핑몰 등록 유도',
-                description: ' 100% 사기입니다. 다른 쇼핑몰이나 결제 사이트에 회원가입을 요구하며 돈을 뜯어내려는 수법입니다. 쇼핑몰에 등록 후 구매자가 물건을 사면 그 사이트에 포인트로 등록이 되는데, 그 포인트를 출금하기 위해서 돈을 계속해서 보내라 요구합니다.<br> 택배를 보낸 상태일 것이기 때문에 물건도 잃고 돈도 잃는 구조입니다. 이미 등록 후 택배를 보내셨다면 입금은 절대 하지 마시고, 신고부터 하시기 바랍니다.',
+                description: ' 100% 사기입니다. 다른 쇼핑몰이나 결제 사이트에 회원가입을 요구하며 돈을 뜯어내려는 수법입니다. 쇼핑몰에 등록 후 구매자가 물건을 사면 그 사이트에 포인트로 등록이 되는데, 그 포인트를 출금하기 위해서 돈을 계속해서 보내라 요구합니다.<br> 택배를 보낸 상태일 것이기 때문에 물건도 잃고 돈도 잃는 구조입니다. 이미 등록 후 택배를 보내셨다면 입금은 절대 하지 마시고, 신고부터 하시기 바랍니다.<br><br><div class="scam-markets-section"><div class="scam-markets-header">📋 신고된 가짜 쇼핑몰 목록</div><div class="scam-markets-list" id="scamMarketsList"></div><div class="add-market-section"><input type="text" id="newMarketName" placeholder="새로운 가짜 쇼핑몰 이름을 입력하세요" maxlength="50"><button onclick="addScamMarket()" class="add-market-btn">추가</button></div></div>',
                 image: exampleImages.timespot
             },
             point: {
@@ -394,6 +394,14 @@
                             }
                         });
                     }
+                }
+                if (type === 'shopping') {
+                    // 가짜 쇼핑몰 데이터 로드 및 실시간 업데이트 설정
+                    setTimeout(async () => {
+                        await loadScamMarkets();
+                        setupMarketInputEvents();
+                        setupScamMarketsRealtime();
+                    }, 100);
                 }
             }
         }
@@ -653,6 +661,174 @@ ${message}
                 changeSliderImage(1);
             }
         }        
+
+        // 가짜 쇼핑몰 목록 (Supabase에서 로드)
+        let scamMarkets = [];
+        
+        // Supabase에서 가짜 쇼핑몰 목록 로드
+        async function loadScamMarkets() {
+            try {
+                console.log('가짜 쇼핑몰 목록 로딩 시작...');
+                
+                const { data, error } = await supabase
+                    .from('scam_markets')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+                
+                if (error) {
+                    console.error('Supabase 오류:', error);
+                    throw error;
+                }
+                
+                console.log('로드된 가짜 쇼핑몰 데이터:', data);
+                scamMarkets = data || [];
+                renderScamMarkets();
+                
+            } catch (error) {
+                console.error('가짜 쇼핑몰 목록 로드 오류:', error);
+                scamMarkets = [];
+                renderScamMarkets();
+            }
+        }
+        
+        // 가짜 쇼핑몰 목록 렌더링
+        function renderScamMarkets() {
+            const listElement = document.getElementById('scamMarketsList');
+            if (!listElement) return;
+            
+            if (scamMarkets.length === 0) {
+                listElement.innerHTML = '<div class="no-markets">아직 등록된 가짜 쇼핑몰이 없습니다.</div>';
+                return;
+            }
+            
+            listElement.innerHTML = scamMarkets.map(market => 
+                `<div class="market-item">
+                    <span class="market-name">#${market.market_name}</span>
+                    <button class="delete-market-btn" onclick="removeScamMarket(${market.id})" title="삭제">×</button>
+                </div>`
+            ).join('');
+        }
+        
+        // 새로운 가짜 쇼핑몰 추가 (Supabase에 저장)
+        async function addScamMarket() {
+            const input = document.getElementById('newMarketName');
+            if (!input) return;
+            
+            const marketName = input.value.trim();
+            
+            if (!marketName) {
+                alert('쇼핑몰 이름을 입력해주세요.');
+                return;
+            }
+            
+            // 중복 체크
+            if (scamMarkets.some(market => market.market_name.toLowerCase() === marketName.toLowerCase())) {
+                alert('이미 등록된 쇼핑몰입니다.');
+                return;
+            }
+            
+            try {
+                console.log('가짜 쇼핑몰 추가 시작:', marketName);
+                
+                const { data, error } = await supabase
+                    .from('scam_markets')
+                    .insert([
+                        {
+                            market_name: marketName,
+                            created_by: 'user'
+                        }
+                    ])
+                    .select();
+        
+                if (error) {
+                    console.error('추가 오류:', error);
+                    
+                    // 중복 에러인 경우
+                    if (error.code === '23505') {
+                        alert('이미 등록된 쇼핑몰입니다.');
+                        return;
+                    }
+                    
+                    throw error;
+                }
+        
+                console.log('추가 성공:', data);
+                
+                input.value = '';
+                alert(`"${marketName}"이(가) 목록에 추가되었습니다.`);
+                
+                // 목록 새로고침
+                await loadScamMarkets();
+                
+            } catch (error) {
+                console.error('가짜 쇼핑몰 추가 오류:', error);
+                alert('추가 중 오류가 발생했습니다. 다시 시도해주세요.');
+            }
+        }
+        
+        // 가짜 쇼핑몰 삭제 (Supabase에서 삭제)
+        async function removeScamMarket(marketId) {
+            if (!confirm('정말로 삭제하시겠습니까?')) return;
+            
+            try {
+                console.log('가짜 쇼핑몰 삭제 시작:', marketId);
+                
+                const { error } = await supabase
+                    .from('scam_markets')
+                    .delete()
+                    .eq('id', marketId);
+        
+                if (error) {
+                    console.error('삭제 오류:', error);
+                    throw error;
+                }
+        
+                console.log('삭제 성공');
+                alert('삭제되었습니다.');
+                
+                // 목록 새로고침
+                await loadScamMarkets();
+                
+            } catch (error) {
+                console.error('가짜 쇼핑몰 삭제 오류:', error);
+                alert('삭제 중 오류가 발생했습니다. 다시 시도해주세요.');
+            }
+        }
+        
+        // 엔터키로 추가
+        function setupMarketInputEvents() {
+            const input = document.getElementById('newMarketName');
+            if (input) {
+                input.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        addScamMarket();
+                    }
+                });
+            }
+        }
+        
+        // 실시간 업데이트 (다른 사용자가 추가/삭제할 때)
+        function setupScamMarketsRealtime() {
+            supabase
+                .channel('scam_markets_channel')
+                .on('postgres_changes', 
+                    { event: 'INSERT', schema: 'public', table: 'scam_markets' }, 
+                    (payload) => {
+                        console.log('새 가짜 쇼핑몰 실시간 수신:', payload.new);
+                        scamMarkets.unshift(payload.new);
+                        renderScamMarkets();
+                    }
+                )
+                .on('postgres_changes', 
+                    { event: 'DELETE', schema: 'public', table: 'scam_markets' }, 
+                    (payload) => {
+                        console.log('가짜 쇼핑몰 삭제 실시간 수신:', payload.old);
+                        scamMarkets = scamMarkets.filter(market => market.id !== payload.old.id);
+                        renderScamMarkets();
+                    }
+                )
+                .subscribe();
+        }
 
         // 초기 공지사항 렌더링
         /*renderNotices();*/
