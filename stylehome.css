@@ -802,7 +802,7 @@ body {
 .main-content {
   display: flex;
   min-height: 600px;
-  max-width: 100%;
+  max-width: 1200px;
   margin: 0;
   padding: 0;
 }
