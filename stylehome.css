@@ -649,3 +649,142 @@ body {
   margin-top: 10px;
   font-size: 11px;
 }
+
+/* 모바일 최적화 */
+body {
+  overflow-x: hidden; /* 가로 스크롤 방지 */
+}
+
+.container {
+  overflow-x: hidden;
+}
+
+/* 텍스트 줄바꿈 개선 */
+.item-text, .section-header, .panel-content, .example-description {
+  word-wrap: break-word;
+  word-break: keep-all;
+  overflow-wrap: break-word;
+}
+
+/* 모바일 반응형 */
+@media (max-width: 768px) {
+  .main-content {
+    padding: 0 8px;
+  }
+  
+  .left-panel {
+    padding: 15px;
+  }
+  
+  .section {
+    margin-bottom: 15px;
+  }
+  
+  .header h1 {
+    font-size: 14px;
+    padding-right: 50px; /* 햄버거 메뉴 공간 확보 */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
+  .item {
+    padding: 8px;
+    margin: 6px 0;
+  }
+  
+  .item-text {
+    font-size: 11px;
+    line-height: 1.3;
+  }
+  
+  .section-header {
+    font-size: 12px;
+    padding: 8px 12px;
+  }
+  
+  .section-content {
+    padding: 10px;
+  }
+  
+  /* 오른쪽 패널 모바일 최적화 */
+  .right-panel {
+    width: 100vw;
+    right: -100vw;
+  }
+  
+  .right-panel.show {
+    right: 0;
+  }
+  
+  .panel-content {
+    padding: 15px;
+  }
+  
+  .example-title {
+    font-size: 13px;
+  }
+  
+  .example-description {
+    font-size: 11px;
+    padding: 10px;
+  }
+  
+  /* 사이드 메뉴 모바일 최적화 */
+  .side-menu {
+    width: 280px;
+    left: -280px;
+  }
+  
+  .menu-section {
+    margin: 10px;
+  }
+  
+  .menu-section-content {
+    padding: 10px;
+  }
+  
+  /* 버튼 터치 최적화 */
+  button, .item.clickable {
+    min-height: 40px;
+  }
+  
+  /* 입력창 iOS 확대 방지 */
+  input, textarea {
+    font-size: 16px !important;
+  }
+  
+  /* 모달 모바일 최적화 */
+  .admin-modal-content {
+    width: 90vw;
+    max-width: 300px;
+    margin: 0 15px;
+  }
+}
+
+/* 더 작은 화면 */
+@media (max-width: 480px) {
+  .header h1 {
+    font-size: 12px;
+  }
+  
+  .item-text {
+    font-size: 10px;
+  }
+  
+  .section-header {
+    font-size: 11px;
+  }
+  
+  .hamburger-menu {
+    left: 10px;
+  }
+  
+  .main-content {
+    padding: 0 5px;
+  }
+  
+  .left-panel {
+    padding: 10px;
+  }
+}
