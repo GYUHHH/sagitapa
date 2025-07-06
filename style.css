@@ -31,6 +31,9 @@ body {
   position: relative;
   width: 100vw;
   margin-left: calc(-50vw + 50%);
+  box-sizing: border-box;
+  left: 0;
+  right: 0;
 }
 
 .back-btn {
