@@ -7,17 +7,16 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <div class="header">
+        <a href="index.html" class="back-btn">🏠 홈으로</a>
+        <h1>새로운 중고거래 사기수법을 제보합니다</h1>
+    </div>
     <div class="container">
-        <div class="header">
-            <a href="index.html" class="back-btn">🏠 홈으로</a>
-            <h1>새로운 중고거래 사기수법을 제보합니다</h1>
-        </div>
-
         <div class="write-form">
             <form onsubmit="submitReport(event)">
                 <div class="form-row">
                     <textarea id="title" placeholder="내용을 입력하세요...(어떤 방법인지 구체적으로 작성해주세요) 작성 시 호스트에게 알림이 발송되며 몇 시간 이내로 체크리스트에 업데이트 됩니다." maxlength="100" required rows="3"></textarea>
-            </div>
+                </div>
             <div class="form-row">
                 <input type="password" id="password" placeholder="비밀번호" maxlength="20" required>
                 <button type="submit" class="submit-btn" id="submitBtn">📝 등록하기</button>
