@@ -931,3 +931,20 @@ body {
 html, body {
   overflow-x: hidden;
 }
+
+/* 모바일에서만 사이드 메뉴 헤더 높이 줄이기 */
+@media (max-width: 768px) {
+  .side-menu-header {
+    padding: 6px 12px; /* 모바일에서만 줄임 */
+  }
+  
+  .side-menu-title {
+    font-size: 12px;
+  }
+  
+  .side-close-btn {
+    width: 20px;
+    height: 20px;
+    font-size: 12px;
+  }
+}
