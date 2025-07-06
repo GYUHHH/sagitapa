@@ -332,6 +332,12 @@ body {
 
 /* ===== 모바일 반응형 ===== */
 @media (max-width: 768px) {
+  .container {
+    border: none;
+    background-color: transparent;
+    box-shadow: none;
+  }
+  
   .header {
     padding: 24px 0;
   }
