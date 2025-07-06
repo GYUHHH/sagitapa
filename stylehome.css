@@ -200,8 +200,9 @@ body {
 
 .close-btn {
   position: absolute;
-  top: 10px;
+  top: 50%;
   right: 15px;
+  transform: translateY(-50%);
   background: rgba(255, 255, 255, 0.2);
   border: 1px solid rgba(255, 255, 255, 0.3);
   color: white;
@@ -892,7 +893,9 @@ body {
   /* 햄버거 메뉴 위치 조정 */
   .hamburger-menu {
     left: 10px;
-    padding: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    padding: 10px;
   }
   
   .header h1 {
