@@ -1062,7 +1062,9 @@
             };
             
             notices.unshift(notice);
-            renderNotices();
+            if (document.getElementById('noticeList')) {
+                renderNotices();
+            }
             closeAdminModal();
             alert('공지사항이 추가되었습니다.');
         }
