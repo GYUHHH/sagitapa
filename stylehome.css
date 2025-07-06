@@ -938,7 +938,7 @@ html, body {
 /* 모바일에서만 사이드 메뉴 헤더 높이 줄이기 */
 @media (max-width: 768px) {
   .side-menu-header {
-    padding: 6px 12px; /* 모바일에서만 줄임 */
+    padding: 4px 12px; /* 모바일에서만 줄임 */
   }
   
   .side-menu-title {
@@ -949,5 +949,8 @@ html, body {
     width: 20px;
     height: 20px;
     font-size: 12px;
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
   }
 }
