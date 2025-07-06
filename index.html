@@ -576,7 +576,8 @@ ${message}
 
         function searchWithGoogleLens() {
             if (uploadedImageUrl) {
-                window.open('https://lens.google.com/', '_blank');
+                const searchUrl = `https://www.google.com/searchbyimage?image_url=${encodeURIComponent(uploadedImageUrl)}`;
+                window.open(searchUrl, '_blank');
             }
         }
 
