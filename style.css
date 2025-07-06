@@ -378,11 +378,11 @@ body {
   display: inline-block;
   padding: 6px 2px;
   margin: 0 2px;
-  border: 1px solid #ddd;
+  border: none;
   background: #fff;
   color: #333;
   cursor: pointer;
-  border-radius: 3px;
+  border-radius: none;
   font-size: 11px;
   min-width: 28px;
   text-align: center;
@@ -395,7 +395,7 @@ body {
 .page-btn.active {
   background: #4a90e2;
   color: white;
-  border-color: #2e5c87;
+  border: none;
 }
 
 /* ===== 푸터 ===== */
