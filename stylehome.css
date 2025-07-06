@@ -948,3 +948,35 @@ html, body {
     font-size: 12px;
   }
 }
+
+/* 헤더 제목 중앙 정렬 */
+.header h1 {
+  text-align: center;
+  width: 100%;
+  margin: 0;
+}
+
+/* 모바일에서 햄버거 메뉴 때문에 밀리는 것 방지 */
+@media (max-width: 768px) {
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+  
+  .hamburger-menu {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+  
+  .header h1 {
+    padding: 0;
+    margin: 0;
+    text-align: center;
+    flex: 1;
+    font-size: 14px;
+  }
+}
