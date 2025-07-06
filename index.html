@@ -299,7 +299,7 @@
             },
             stolen_photo: {
                 title: '도용 사진 의심',
-                description: '인터넷에서 가져온 사진을 사용할 수 있습니다. 구글 이미지 검색으로 다른 곳에서 사진을 가져왔는지 확인해보세요.<br><br><div class="image-upload-section"><h3>사진 확인하기</h3><input type="file" id="imageInput" accept="image/*" style="display: none;"><button class="upload-btn" onclick="document.getElementById(\'imageInput\').click()">사진 업로드</button><div id="imageContainer"></div><button class="google-lens-btn" id="googleLensBtn" style="display: none;" onclick="searchWithGoogleLens()">구글 이미지로 검색</button></div>',
+                description: '인터넷에서 가져온 사진을 사용할 수 있습니다. 구글 이미지 검색으로 다른 곳에서 사진을 가져왔는지 확인해보세요.<br><br><button class="google-lens-btn" onclick="searchWithGoogleLens()">구글 이미지로 검색</button>',
                 image: exampleImages.timespot
             },
             scam_search: {
@@ -575,11 +575,7 @@ ${message}
         }
 
         function searchWithGoogleLens() {
-             if (uploadedImageUrl) {
-                 // 구글 이미지 검색 페이지를 열고 수동 업로드 안내
-                 window.open('https://images.google.com/', '_blank');
-                 alert('구글 이미지 검색이 열렸습니다.\n카메라 아이콘(📷)을 클릭해서 이미지를 직접 업로드하세요.');
-            }
+            window.open('https://images.google.com/', '_blank');
         }
 
         // 초기 공지사항 렌더링
