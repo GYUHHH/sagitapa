@@ -708,8 +708,9 @@ body {
   
   /* 오른쪽 패널 모바일 최적화 */
   .right-panel {
-    width: 100vw;
-    right: -100vw;
+    width: 85vw;
+    max-width: 320px;
+    right: -85vw;
   }
   
   .right-panel.show {
