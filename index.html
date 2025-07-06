@@ -296,7 +296,7 @@
             fake_photo: {
                 title: '합성 사진 의심',
                 description: ' 사진이 부자연스럽거나 확대했을 때 노이즈가 있고, 경계선 부분이 다른 느낌이 들면 합성 사진일 수 있습니다. 해당 사이트를 이용해 확인해보고, 의심이 간다면 실시간 영상통화나 추가 사진을 요청해보세요.<br>사진 인증을 했다고 오히려 화를 낸다면 더 의심하세요. 정상적인 판매자라면 사기 예방을 위해 그런 것임을 알고 협조해줄 것입니다.<br><br>사진 합성 판독 링크:<br>• <a href="https://fotoforensics.com/" target="_blank" style="color: #4a90e2; text-decoration: underline;">fotoforensics</a>'',
-                image: exampleImages.timespot
+                image: ['images/fake_photo1.png', 'images/fake_photo2.png']
             },
             stolen_photo: {
                 title: '도용 사진 의심',
@@ -335,11 +335,49 @@
             const example = examples[type];
             
             if (example) {
+                let imageHTML = '';
+
+                // 이미지가 배열인지 확인
+                if (Array.isArray(example.image)) {
+                    // 다중 이미지 슬라이더
+                    imageHTML = `
+                        <div class="image-slider">
+                            <div class="slider-container">
+                                ${example.image.map((img, index) => 
+                                    `<img src="${img}" alt="${example.title} ${index + 1}" class="slider-image ${index === 0 ? 'active' : ''}" data-index="${index}" onerror="this.style.display='none';">`
+                                ).join('')}
+                            </div>
+                            <div class="slider-controls">
+                                <button class="slider-btn prev" onclick="changeSliderImage(-1)">◀</button>
+                                <span class="slider-indicator">
+                                    <span class="current-image">1</span> / <span class="total-images">${example.image.length}</span>
+                                </span>
+                                <button class="slider-btn next" onclick="changeSliderImage(1)">▶</button>
+                            </div>
+                            <div class="slider-instruction">← → 방향키로도 이미지를 전환할 수 있습니다</div>
+                        </div>
+                    `;
+                } else {
+                    // 단일 이미지
+                    imageHTML = `<img src="${example.image}" alt="${example.title}" class="example-image" onerror="this.style.display='none';">`;
+                }
+                
                 panelContent.innerHTML = `
                     <div class="example-title">${example.title}</div>
                     <div class="example-description">${example.description}</div>
-                    <img src="${example.image}" alt="${example.title}" class="example-image" onerror="this.style.display='none';">
+                    ${imageHTML}
                 `;
+
+                container.classList.add('panel-open');
+                rightPanel.classList.add('show');
+
+                // 키보드 이벤트 리스너 추가 (이미지 슬라이더가 있을 때만)
+                if (Array.isArray(example.image)) {
+                    document.addEventListener('keydown', handleSliderKeyboard);
+                    // 전역 변수로 현재 슬라이더 상태 저장
+                    window.currentSliderIndex = 0;
+                    window.totalSliderImages = example.image.length;
+                }
                 
                 container.classList.add('panel-open');
                 rightPanel.classList.add('show');
@@ -378,6 +416,13 @@
             
             container.classList.remove('panel-open');
             rightPanel.classList.remove('show');
+
+            // 키보드 이벤트 리스너 제거
+            document.removeEventListener('keydown', handleSliderKeyboard);
+    
+             // 슬라이더 관련 전역 변수 초기화
+            window.currentSliderIndex = 0;
+            window.totalSliderImages = 0;
         }
 
         function toggleMenuSection(sectionType) {
@@ -578,6 +623,44 @@ ${message}
         function searchWithGoogleLens() {
             window.open('https://images.google.com/', '_blank');
         }
+        function changeSliderImage(direction) {
+            if (!window.totalSliderImages) return;
+    
+            const currentImages = document.querySelectorAll('.slider-image');
+            const currentIndicator = document.querySelector('.current-image');
+    
+            // 현재 활성 이미지 비활성화
+            currentImages[window.currentSliderIndex].classList.remove('active');
+    
+            // 새 인덱스 계산
+            window.currentSliderIndex += direction;
+    
+            // 범위 체크 및 순환
+            if (window.currentSliderIndex >= window.totalSliderImages) {
+                window.currentSliderIndex = 0;
+            } else if (window.currentSliderIndex < 0) {
+                window.currentSliderIndex = window.totalSliderImages - 1;
+            }
+    
+            // 새 이미지 활성화
+            currentImages[window.currentSliderIndex].classList.add('active');
+    
+            // 인디케이터 업데이트
+            if (currentIndicator) {
+                currentIndicator.textContent = window.currentSliderIndex + 1;
+            }
+        }
+
+        // 키보드 이벤트 핸들러
+        function handleSliderKeyboard(event) {
+            if (event.key === 'ArrowLeft') {
+                event.preventDefault();
+                changeSliderImage(-1);
+            } else if (event.key === 'ArrowRight') {
+                event.preventDefault();
+                changeSliderImage(1);
+            }
+        }        
 
         // 초기 공지사항 렌더링
         renderNotices();
