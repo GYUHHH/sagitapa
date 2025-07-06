@@ -53,7 +53,7 @@
                         </div>
                         <div class="item clickable" onclick="showExample('safesite', this)">
                             <div class="item-text">
-                                <span class="danger-text">안전거래 사이트 링크</span>를 주고 이쪽에서 결제하라고 하나요?
+                                <span class="danger-text">네이버페이 안전거래 사이트 링크</span>를 주고 이쪽에서 결제하라고 하나요?
                             </div>
                         </div>
                     </div>
@@ -74,7 +74,7 @@
                         </div>
                         <div class="item clickable" onclick="showExample('fee', this)">
                             <div class="item-text">
-                                입금했는데 <span class="danger-text">수수료</span> 어쩌고 하면서 재입금을 유도하나요?
+                                입금했는데 <span class="danger-text">수수료</span> 목적이라면서 재입금을 유도하나요?
                             </div>
                         </div>
                     </div>
@@ -83,24 +83,19 @@
                 <div class="section">
                     <div class="section-header">프로필 및 연락 의심 신호</div>
                     <div class="section-content">
-                        <div class="item clickable" onclick="showExample('no_history', this)">
-                            <div class="item-text">
-                                프로필을 누르면 <span class="danger-text">거래 기록 내역이 거의 없나요?</span>
-                            </div>
-                        </div>
                         <div class="item clickable" onclick="showExample('new_user', this)">
                             <div class="item-text">
-                                프로필 보면 <span class="danger-text">가입한 지 얼마되지 않은</span> 이용자인가요?
+                                프로필을 보면 <span class="danger-text">가입한 지 얼마되지 않았는데 물건이 갑자기 많이 올라온</span> 이용자인가요?
                             </div>
                         </div>
                         <div class="item clickable" onclick="showExample('profile', this)">
                             <div class="item-text">
-                                프로필 보면 거래 기록 내역이 <span class="danger-text">근 몇 년 간 없다가 다시 생겼나요?</span>
+                                프로필을 보면 거래 기록 내역이 <span class="danger-text">근 몇 년 간 없다가 다시 생겼나요?</span>
                             </div>
                         </div>
                         <div class="item clickable" onclick="showExample('boss', this)">
                             <div class="item-text">
-                                <span class="danger-text">사장님</span>이라는 호칭을 사용하나요?
+                                거래 관련 연락 시 <span class="danger-text">사장님</span>이라는 호칭을 사용하나요?
                             </div>
                         </div>
                     </div>
@@ -111,22 +106,22 @@
                     <div class="section-content">
                         <div class="item clickable" onclick="showExample('id_verify', this)">
                             <div class="item-text">
-                                <span class="danger-text">주민등록증으로 인증</span>하려고 하나요?
+                               인증을 <span class="danger-text">주민등록증</span>으로 하려고 하나요?
                             </div>
                         </div>
                         <div class="item clickable" onclick="showExample('photo_date', this)">
                             <div class="item-text">
-                                사진을 <span class="danger-text">오늘 찍은 게 아닌가요?</span> (사진 정보에서 확인 가능)
+                                사진이 <span class="danger-text">오늘 찍힌 것이</span> 아닌가요? (사진 정보에서 확인 가능)
                             </div>
                         </div>
                         <div class="item clickable" onclick="showExample('fake_photo', this)">
                             <div class="item-text">
-                                받은 사진이 <span class="danger-text">합성</span>인 것 같나요?
+                                사진이 <span class="danger-text">합성</span>인 것 같나요?
                             </div>
                         </div>
                         <div class="item clickable" onclick="showExample('stolen_photo', this)">
                             <div class="item-text">
-                                받은 사진이 <span class="danger-text">도용</span>된 것 같나요?
+                                사진이 <span class="danger-text">도용</span>된 것 같나요?
                             </div>
                         </div>
                     </div>
@@ -291,7 +286,7 @@
             photo_date: {
                 title: '기존 사진 사용',
                 description: ' 상품 사진의 촬영 날짜가 오늘이 아니라면 실제 보유하지 않은 물건일 수 있습니다. 스마트폰에서 사진 정보를 확인하여 언제 찍은 사진인지 확인해보세요.',
-                image: exampleImages.timespot
+                image: 'images/photodate.png'
             },
             fake_photo: {
                 title: '합성 사진 의심',
