@@ -1006,3 +1006,23 @@ body {
 #contactContent.collapsed {
     display: none;
 }
+
+/* 키보드로 선택된 항목 하이라이트 */
+.item.keyboard-selected {
+    background-color: #e3f2fd;
+    border-left: 4px solid #2196f3;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    transform: translateX(2px);
+    transition: all 0.2s ease;
+}
+
+/* 포커스 가능한 항목들 */
+.item.clickable {
+    transition: all 0.2s ease;
+    outline: none;
+}
+
+.item.clickable:focus {
+    background-color: #f0f8ff;
+    border-left: 2px solid #4a90e2;
+}
