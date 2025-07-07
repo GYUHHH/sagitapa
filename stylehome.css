@@ -784,14 +784,14 @@ body {
   }
 
   .scam-markets-list {
+    grid-template-columns: repeat(3, 1fr);
     gap: 4px;
   }
   
   .market-item {
-    font-size: 10px;
-    padding: 2px 5px;
-    max-width: calc(50% - 2px);
-    min-height: 16px;
+    font-size: 8px;
+    padding: 1px 3px;
+    min-height: 12px;
   }
   
   .section-content {
@@ -838,7 +838,14 @@ body {
   }
   
   .scam-markets-list {
-    flex-direction: column;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 3px;
+  }
+  
+  .market-item {
+    font-size: 7px;
+    padding: 1px 2px;
+    min-height: 10px;
   }
 }
 
@@ -952,27 +959,26 @@ body {
     max-height: 300px;
     overflow-y: auto;
     margin-bottom: 15px;
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 항상 3열 유지 */
     gap: 6px;
-    justify-content: flex-start;
+    justify-content: center;
 }
 
 .market-item {
-    display: inline-flex;
+    display: flex;
     align-items: center;
+    justify-content: space-between;
     background: #dc3545;
     color: white;
-    padding: 6px 10px;
-    border-radius: 12px;
-    font-size: 11px;
-    gap: 5px;
-    min-height: 24px; 
-    max-width: calc(50% - 3px); /* 추가: 2열 강제 */
-    box-sizing: border-box; /* 추가 */
-    text-overflow: ellipsis; /* 추가 */
-    overflow: hidden; /* 추가 */
-    white-space: nowrap; /* 추가 */
+    padding: 1px 4px;
+    border-radius: 8px;
+    font-size: 9px;
+    gap: 3px;
+    min-height: 14px;
+    width: 100%; /* Grid 셀에 맞게 */
+    box-sizing: border-box;
+    /* max-width 제거 */
 }
 
 .market-name {
