@@ -15,11 +15,11 @@
         <div class="write-form">
             <form onsubmit="submitReport(event)">
                 <div class="form-row">
-                    <textarea id="title" placeholder="내용을 입력하세요..." maxlength="100" required rows="3"></textarea>
+                    <textarea id="title" placeholder="피해 내용을 입력하세요...(상황을 구체적으로 작성해주세요) 작성 시 호스트에게 알림이 발송되며 몇 시간 이내로 체크리스트에 업데이트 됩니다." maxlength="100" required rows="3"></textarea>
                 </div>
                 <div class="form-row">
                     <input type="password" id="password" placeholder="비밀번호" maxlength="20" required>
-                    <button type="submit" class="submit-btn" id="submitBtn">📝 등록하기</button>
+                    <button type="submit" class="submit-btn" id="submitBtn">📝 신고하기</button>
                 </div>
             </form>
         </div>
@@ -51,7 +51,7 @@
         <div class="modal-content">
             <div class="modal-header">게시글 수정</div>
             <div class="modal-body">
-                <textarea id="editTitle" class="modal-input" placeholder="수정할 제목" rows="3"></textarea>
+                <textarea id="editTitle" class="modal-input" placeholder="수정할 내용" rows="3"></textarea>
                 <input type="password" id="editPassword" class="modal-input" placeholder="비밀번호">
             </div>
             <div class="modal-footer">
@@ -89,6 +89,11 @@
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJtdWxpamVlYnlvaGlsbnlxa2V2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE3MTAwODMsImV4cCI6MjA2NzI4NjA4M30.Cf4mZutF14QVT7bfY1GJk6iBkKT8ALUA0uGkvLHKWDg';
         const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
+        // ↓↓↓ 여기만 변경 ↓↓↓
+        const TABLE_NAME = 'scam_victims'; // 새로운 테이블 이름
+        const CHANNEL_NAME = 'scam_victims_channel'; // 새로운 채널 이름
+        // ↑↑↑ 여기까지 변경 ↑↑↑
+
         let reports = [];
         let filteredReports = [];
         let currentPage = 1;
@@ -102,7 +107,7 @@
                 console.log('데이터 로딩 시작...');
                 
                 const { data, error } = await supabase
-                    .from('newreports')
+                    .from(TABLE_NAME)
                     .select('*')
                     .order('id', { ascending: false });
                 
@@ -227,13 +232,13 @@
             }
 
             submitBtn.disabled = true;
-            submitBtn.textContent = '등록 중...';
+            submitBtn.textContent = '신고 중...';
 
             try {
                 console.log('데이터 저장 시작:', title);
                 
                 const { data, error } = await supabase
-                    .from('newreports')
+                    .from(TABLE_NAME)
                     .insert([
                         {
                             title: title,
@@ -268,7 +273,7 @@
                 alert('저장 중 오류가 발생했습니다. 다시 시도해주세요.\n오류: ' + error.message);
             } finally {
                 submitBtn.disabled = false;
-                submitBtn.textContent = '📝 등록하기';
+                submitBtn.textContent = '📝 신고하기';
             }
         }
 
@@ -282,7 +287,7 @@
                 if (isSearching) {
                     boardList.innerHTML = '<div class="no-posts">검색결과가 없습니다.</div>';
                 } else {
-                    boardList.innerHTML = '<div class="no-posts">등록된 제보가 없습니다.</div>';
+                    boardList.innerHTML = '<div class="no-posts">등록된 신고가 없습니다.</div>';
                 }
                 return;
             }
@@ -350,7 +355,7 @@
             try {
                 // 비밀번호 확인
                 const { data: checkData, error: checkError } = await supabase
-                    .from('newreports')
+                    .from(TABLE_NAME)
                     .select('password')
                     .eq('id', currentEditId)
                     .single();
@@ -364,7 +369,7 @@
 
                 // 제목 수정
                 const { data, error } = await supabase
-                    .from('newreports')
+                    .from(TABLE_NAME)
                     .update({ 
                         title: newTitle,
                         date: getCurrentDateTime() + ' (수정됨)'
@@ -407,7 +412,7 @@
             try {
                 // 비밀번호 확인
                 const { data: checkData, error: checkError } = await supabase
-                    .from('newreports')
+                    .from(TABLE_NAME)
                     .select('password')
                     .eq('id', currentDeleteId)
                     .single();
@@ -421,7 +426,7 @@
 
                 // 게시글 삭제
                 const { error } = await supabase
-                    .from('newreports')
+                    .from(TABLE_NAME)
                     .delete()
                     .eq('id', currentDeleteId);
 
@@ -485,9 +490,9 @@
 
         // 실시간 업데이트
         supabase
-            .channel('newreports_channel')
+            .channel(CHANNEL_NAME)
             .on('postgres_changes', 
-                { event: 'INSERT', schema: 'public', table: 'newreports' }, 
+                { event: 'INSERT', schema: 'public', table: TABLE_NAME }, 
                 (payload) => {
                     console.log('새 게시글 실시간 수신:', payload.new);
                     reports.unshift(payload.new);
@@ -500,7 +505,7 @@
                 }
             )
             .on('postgres_changes', 
-                { event: 'UPDATE', schema: 'public', table: 'newreports' }, 
+                { event: 'UPDATE', schema: 'public', table: TABLE_NAME }, 
                 (payload) => {
                     console.log('게시글 수정 실시간 수신:', payload.new);
                     const reportsIndex = reports.findIndex(r => r.id === payload.new.id);
@@ -517,7 +522,7 @@
                 }
             )
             .on('postgres_changes', 
-                { event: 'DELETE', schema: 'public', table: 'newreports' }, 
+                { event: 'DELETE', schema: 'public', table: TABLE_NAME }, 
                 (payload) => {
                     console.log('게시글 삭제 실시간 수신:', payload.old);
                     reports = reports.filter(r => r.id !== payload.old.id);
