@@ -176,19 +176,15 @@
                 <div class="menu-section-content" id="contactContent">
                     <form class="contact-form" id="contactForm" onsubmit="submitContact(event)">
                         <div class="form-group">
-                            <label for="contactEmail">이메일 주소</label>
-                            <input type="email" id="contactEmail" name="email" required placeholder="답변받을 이메일을 입력하세요">
-                        </div>
-                        <div class="form-group">
                             <label for="contactSubject">제목</label>
                             <input type="text" id="contactSubject" name="subject" required>
                         </div>
                         <div class="form-group">
                             <label for="contactMessage">내용</label>
-                            <textarea id="contactMessage" name="message" placeholder="사기 신고, 문의사항, 개선 제안 등을 남겨주세요." required></textarea>
+                            <textarea id="contactMessage" name="message" placeholder="문의 사항, 개선 제안 등을 남겨주세요." required></textarea>
                         </div>
                         <button type="submit" class="submit-btn" id="submitBtn">문의 보내기</button>
-                        <div class="loading" id="loadingMsg">메일을 전송 중입니다...</div>
+                        <div class="loading" id="loadingMsg">전송 중입니다...</div>
                         <div id="messageResult"></div>
                     </form>
                 </div>
