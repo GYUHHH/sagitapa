@@ -838,6 +838,120 @@ ${message}
 
         // 초기 공지사항 렌더링
         /*renderNotices();*/
+
+        // 초기 공지사항 렌더링
+        /*renderNotices();*/
+
+        // ⬇️⬇️⬇️ 여기서부터 키보드 네비게이션 코드 추가 ⬇️⬇️⬇️
+        
+        // 키보드 네비게이션 관련 변수
+        let currentSelectedIndex = -1;
+        let selectableItems = [];
+
+        // 키보드 네비게이션 초기화
+        function initKeyboardNavigation() {
+            // 클릭 가능한 모든 항목 선택
+            selectableItems = document.querySelectorAll('.item.clickable');
+            
+            // 각 항목에 탭 인덱스 추가
+            selectableItems.forEach((item, index) => {
+                item.setAttribute('tabindex', '0');
+                item.setAttribute('data-nav-index', index);
+            });
+            
+            // 키보드 이벤트 리스너 추가
+            document.addEventListener('keydown', handleKeyboardNavigation);
+        }
+
+        // 키보드 네비게이션 핸들러
+        function handleKeyboardNavigation(event) {
+            // 입력 필드나 버튼에 포커스가 있을 때는 네비게이션 비활성화
+            if (event.target.tagName === 'INPUT' || 
+                event.target.tagName === 'TEXTAREA' || 
+                event.target.tagName === 'BUTTON') {
+                return;
+            }
+            
+            switch(event.key) {
+                case 'ArrowDown':
+                    event.preventDefault();
+                    navigateDown();
+                    break;
+                case 'ArrowUp':
+                    event.preventDefault();
+                    navigateUp();
+                    break;
+                case 'Enter':
+                    event.preventDefault();
+                    selectCurrentItem();
+                    break;
+                case 'Escape':
+                    event.preventDefault();
+                    clearSelection();
+                    break;
+            }
+        }
+
+        // 아래로 이동
+        function navigateDown() {
+            if (currentSelectedIndex < selectableItems.length - 1) {
+                currentSelectedIndex++;
+            } else {
+                currentSelectedIndex = 0; // 맨 아래에서 맨 위로 순환
+            }
+            updateSelection();
+        }
+
+        // 위로 이동
+        function navigateUp() {
+            if (currentSelectedIndex > 0) {
+                currentSelectedIndex--;
+            } else {
+                currentSelectedIndex = selectableItems.length - 1; // 맨 위에서 맨 아래로 순환
+            }
+            updateSelection();
+        }
+
+        // 선택 상태 업데이트
+        function updateSelection() {
+            // 기존 선택 해제
+            selectableItems.forEach(item => {
+                item.classList.remove('keyboard-selected');
+            });
+            
+            // 현재 선택 항목 표시
+            if (currentSelectedIndex >= 0 && currentSelectedIndex < selectableItems.length) {
+                const selectedItem = selectableItems[currentSelectedIndex];
+                selectedItem.classList.add('keyboard-selected');
+                
+                // 선택된 항목이 화면에 보이도록 스크롤
+                selectedItem.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'nearest'
+                });
+            }
+        }
+
+        // 현재 선택된 항목 클릭
+        function selectCurrentItem() {
+            if (currentSelectedIndex >= 0 && currentSelectedIndex < selectableItems.length) {
+                const selectedItem = selectableItems[currentSelectedIndex];
+                selectedItem.click();
+            }
+        }
+
+        // 선택 해제
+        function clearSelection() {
+            currentSelectedIndex = -1;
+            selectableItems.forEach(item => {
+                item.classList.remove('keyboard-selected');
+            });
+        }
+
+        // 페이지 로드시 키보드 네비게이션 초기화
+        initKeyboardNavigation();
+        
+        // ⬆️⬆️⬆️ 여기까지 키보드 네비게이션 코드 추가 ⬆️⬆️⬆️
     </script>
     <div class="footer">
         <p>Copyright © 2025 sagitapa. All rights reserved.</p>
