@@ -332,6 +332,11 @@
             });
             
             element.classList.add('active');
+
+            const clickedIndex = Array.from(selectableItems).indexOf(element);
+            if (clickedIndex !== -1) {
+                currentSelectedIndex = clickedIndex;
+            }
             
             const example = examples[type];
             
@@ -894,6 +899,9 @@ ${message}
 
         // 아래로 이동
         function navigateDown() {
+            document.querySelectorAll('.item').forEach(item => {
+                item.classList.remove('active');
+            });
             if (currentSelectedIndex < selectableItems.length - 1) {
                 currentSelectedIndex++;
             } else {
@@ -904,6 +912,9 @@ ${message}
 
         // 위로 이동
         function navigateUp() {
+            document.querySelectorAll('.item').forEach(item => {
+                item.classList.remove('active');
+            });
             if (currentSelectedIndex > 0) {
                 currentSelectedIndex--;
             } else {
