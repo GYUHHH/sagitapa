@@ -989,3 +989,20 @@ body {
     font-style: italic;
     padding: 20px;
 }
+
+/* 문의하기 섹션을 기본적으로 닫힌 상태로 설정 */
+#contactContent {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+}
+
+/* 문의하기 섹션이 열렸을 때 */
+#contactContent:not(.collapsed) {
+    max-height: 500px; /* 충분한 높이 설정 */
+}
+
+/* 또는 간단하게 display로 제어 */
+#contactContent.collapsed {
+    display: none;
+}
