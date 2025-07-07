@@ -950,7 +950,10 @@ ${message}
             currentSelectedIndex = -1;
             selectableItems.forEach(item => {
                 item.classList.remove('keyboard-selected');
+                item.classList.remove('active');
             });
+
+            closePanel();
         }
 
         // 페이지 로드시 키보드 네비게이션 초기화
