@@ -964,7 +964,7 @@ body {
     flex: 1;
     padding: 6px 10px;
     border: 1px solid #ddd;
-    border-radius: 4px;
+    border-radius: 0;
     font-size: 12px;
 }
 
@@ -973,7 +973,7 @@ body {
     color: white;
     border: none;
     padding: 6px 12px;
-    border-radius: 4px;
+    border-radius: 0;
     cursor: pointer;
     font-size: 11px;
     white-space: nowrap;
