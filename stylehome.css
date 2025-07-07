@@ -1077,3 +1077,59 @@ body {
     background-color: #f0f8ff;
     border-left: 2px solid #4a90e2;
 }
+
+/* ===== 패널 네비게이션 버튼 ===== */
+.panel-navigation {
+    position: sticky;
+    bottom: 0;
+    background-color: #f8f8f8;
+    border-top: 1px solid #ddd;
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.nav-btn {
+    flex: 1;
+    padding: 10px 15px;
+    border: 1px solid #4a90e2;
+    background: linear-gradient(to bottom, #4a90e2, #357abd);
+    color: white;
+    cursor: pointer;
+    font-size: 12px;
+    border-radius: 3px;
+    transition: all 0.2s ease;
+}
+
+.nav-btn:hover {
+    background: linear-gradient(to bottom, #357abd, #2e5c87);
+}
+
+.nav-btn:disabled {
+    background: #ccc;
+    border-color: #ccc;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.prev-btn {
+    margin-right: 5px;
+}
+
+.next-btn {
+    margin-left: 5px;
+}
+
+/* 모바일에서 버튼 크기 조정 */
+@media (max-width: 768px) {
+    .panel-navigation {
+        padding: 10px 15px;
+    }
+    
+    .nav-btn {
+        padding: 12px 10px;
+        font-size: 11px;
+        min-height: 40px;
+    }
+}
