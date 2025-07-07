@@ -781,29 +781,29 @@ body {
   }
 
   .form-group {
-    margin-bottom: 15px;
+    margin-bottom: 10px;
   }
   
   .form-group input,
   .form-group textarea {
-    padding: 12px 10px;
+    padding: 8px 8px;
     font-size: 16px !important;
     border-radius: 4px;
   }
   
   .form-group textarea {
-    min-height: 100px;
+    min-height: 60px;
   }
   
   .form-group label {
-    font-size: 14px;
-    margin-bottom: 8px;
+    font-size: 12px;
+    margin-bottom: 4px;
   }
   
   .submit-btn {
-    padding: 12px 20px;
-    font-size: 14px;
-    border-radius: 4px;
+    padding: 12px 16px;
+    font-size: 10px;
+    border-radius: 0;
   }
   
   /* 모달 */
