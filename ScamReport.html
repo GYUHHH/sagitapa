@@ -3,21 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>사기를 제보합니다</title>
+    <title>중고거래 사기를 당했습니다</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <div class="header">
+        <a href="index.html" class="back-btn">🏠 홈으로</a>
+        <h1>중고거래 사기를 당했습니다</h1>
+    </div>
     <div class="container">
-        <div class="header">
-            <a href="index.html" class="back-btn">🏠 홈으로</a>
-            <h1>사기를 제보합니다</h1>
-        </div>
-
         <div class="write-form">
             <form onsubmit="submitReport(event)">
                 <div class="form-row">
-                    <input type="text" id="title" placeholder="제목을 입력하세요..." maxlength="100" required>
-                    <button type="submit" class="submit-btn">📝 제출하기</button>
+                    <textarea id="title" placeholder="내용을 입력하세요..." maxlength="100" required rows="3"></textarea>
+                </div>
+                <div class="form-row">
+                    <input type="password" id="password" placeholder="비밀번호" maxlength="20" required>
+                    <button type="submit" class="submit-btn" id="submitBtn">📝 등록하기</button>
                 </div>
             </form>
         </div>
@@ -25,31 +27,171 @@
         <div id="successMessage" style="display: none;"></div>
 
         <div class="board-list">
-            
             <div id="boardList">
-                <!-- 게시글 목록이 여기에 표시됩니다 -->
+                <div class="loading">게시글을 불러오는 중...</div>
             </div>
+        </div>
 
-            <div class="board-stats">
-                Copyright © 2025 WriteAnything. All rights reserved.
+        <!-- 페이지네이션 -->
+        <div class="pagination" id="pagination">
+            <!-- 페이지 버튼들이 여기에 동적으로 생성됩니다 -->
+        </div>
+
+        <!-- 검색 기능 -->
+        <div class="search-section">
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="검색..." maxlength="50">
+                <button class="search-btn" onclick="searchReports()">🔍 검색</button>
             </div>
         </div>
     </div>
 
-    <script>
-        let reports = [
-            { id: 23, title: "ㅇ", date: "25. 07. 05. 오후 02:40" },
-            { id: 22, title: "ㅇ", date: "25. 07. 05. 오후 02:40" },
-            { id: 21, title: "ㅇ", date: "25. 07. 05. 오후 02:40" },
-            { id: 20, title: "포포포", date: "25. 07. 05. 오후 02:40" },
-            { id: 19, title: "ㅌㅌ", date: "25. 07. 05. 오후 02:40" },
-            { id: 18, title: "ㅍ", date: "25. 07. 05. 오후 02:40" },
-            { id: 17, title: "ㅊ", date: "25. 07. 05. 오후 02:40" },
-            { id: 16, title: "", date: "25. 07. 05. 오후 02:40" }
-        ];
+    <!-- 수정 모달 -->
+    <div class="modal" id="editModal">
+        <div class="modal-content">
+            <div class="modal-header">게시글 수정</div>
+            <div class="modal-body">
+                <textarea id="editTitle" class="modal-input" placeholder="수정할 제목" rows="3"></textarea>
+                <input type="password" id="editPassword" class="modal-input" placeholder="비밀번호">
+            </div>
+            <div class="modal-footer">
+                <button class="modal-btn secondary" onclick="closeModal()">취소</button>
+                <button class="modal-btn primary" onclick="confirmEdit()">수정</button>
+            </div>
+        </div>
+    </div>
 
-        function formatNumber(num) {
-            return String(num).padStart(6, '0');
+    <!-- 삭제 모달 -->
+    <div class="modal" id="deleteModal">
+        <div class="modal-content">
+            <div class="modal-header">게시글 삭제</div>
+            <div class="modal-body">
+                <p>정말로 삭제하시겠습니까?</p>
+                <input type="password" id="deletePassword" class="modal-input" placeholder="비밀번호">
+            </div>
+            <div class="modal-footer">
+                <button class="modal-btn secondary" onclick="closeModal()">취소</button>
+                <button class="modal-btn primary" onclick="confirmDelete()">삭제</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>Copyright © 2025 sagitapa. All rights reserved.</p>
+    </div>
+
+    <!-- Supabase JavaScript SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <script>
+        // Supabase 설정
+        const SUPABASE_URL = 'https://rmulijeebyohilnyqkev.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJtdWxpamVlYnlvaGlsbnlxa2V2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE3MTAwODMsImV4cCI6MjA2NzI4NjA4M30.Cf4mZutF14QVT7bfY1GJk6iBkKT8ALUA0uGkvLHKWDg';
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        let reports = [];
+        let filteredReports = [];
+        let currentPage = 1;
+        const itemsPerPage = 10;
+        let currentEditId = null;
+        let currentDeleteId = null;
+
+        // 페이지 로드시 데이터 가져오기
+        async function loadReports() {
+            try {
+                console.log('데이터 로딩 시작...');
+                
+                const { data, error } = await supabase
+                    .from('newreports')
+                    .select('*')
+                    .order('id', { ascending: false });
+                
+                if (error) {
+                    console.error('Supabase 오류:', error);
+                    throw error;
+                }
+                
+                console.log('로드된 데이터:', data);
+                reports = data || [];
+                filteredReports = [...reports];
+                currentPage = 1;
+                renderReports();
+                renderPagination();
+                
+            } catch (error) {
+                console.error('데이터 로드 오류:', error);
+                reports = [];
+                filteredReports = [];
+                renderReports();
+                renderPagination();
+            }
+        }
+
+        // 검색 기능
+        function searchReports() {
+            const searchTerm = document.getElementById('searchInput').value.trim().toLowerCase();
+            
+            if (searchTerm === '') {
+                filteredReports = [...reports];
+            } else {
+                filteredReports = reports.filter(report => 
+                    report.title.toLowerCase().includes(searchTerm)
+                );
+            }
+            
+            currentPage = 1;
+            renderReports();
+            renderPagination();
+        }
+
+        // 엔터 키로 검색
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('searchInput').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    searchReports();
+                }
+            });
+        });
+
+        // 페이지 변경
+        function changePage(page) {
+            currentPage = page;
+            renderReports();
+            renderPagination();
+        }
+
+        // 페이지네이션 렌더링
+        function renderPagination() {
+            const totalPages = Math.ceil(filteredReports.length / itemsPerPage);
+            const paginationEl = document.getElementById('pagination');
+            
+            let paginationHTML = '';
+            
+            // 이전 버튼
+            if (currentPage > 1) {
+                paginationHTML += `<button class="page-btn" onclick="changePage(${currentPage - 1})">‹</button>`;
+            }
+            
+            // 페이지 번호들
+            const startPage = Math.max(1, currentPage - 2);
+            const endPage = Math.min(totalPages, currentPage + 2);
+            
+            for (let i = startPage; i <= endPage; i++) {
+                const activeClass = i === currentPage ? 'active' : '';
+                paginationHTML += `<button class="page-btn ${activeClass}" onclick="changePage(${i})">${i}</button>`;
+            }
+            
+            // 다음 버튼
+            if (currentPage < totalPages) {
+                paginationHTML += `<button class="page-btn" onclick="changePage(${currentPage + 1})">›</button>`;
+            }
+            
+            // 페이지가 하나도 없으면 빈 페이지네이션 표시
+            if (totalPages === 0) {
+                paginationHTML = '<button class="page-btn active">1</button>';
+            }
+            
+            paginationEl.innerHTML = paginationHTML;
         }
 
         function getCurrentDateTime() {
@@ -65,63 +207,342 @@
             return `${year}. ${month}. ${day}. ${period} ${displayHours}:${minutes}`;
         }
 
-        function submitReport(event) {
+        async function submitReport(event) {
             event.preventDefault();
             
             const titleInput = document.getElementById('title');
+            const passwordInput = document.getElementById('password');
+            const submitBtn = document.getElementById('submitBtn');
             const title = titleInput.value.trim();
+            const password = passwordInput.value.trim();
             
             if (!title) {
-                alert('제목을 입력해 주세요.');
+                alert('내용을 입력해 주세요.');
+                return;
+            }
+            
+            if (!password) {
+                alert('비밀번호를 입력해 주세요.');
                 return;
             }
 
-            // 새 게시글 추가
-            const newReport = {
-                id: Math.max(...reports.map(r => r.id)) + 1,
-                title: title,
-                date: getCurrentDateTime()
-            };
-            
-            reports.unshift(newReport);
-            renderReports();
-            
-            // 성공 메시지 표시
-            const successMsg = document.getElementById('successMessage');
-            successMsg.innerHTML = '<div class="success-message">제보가 성공적으로 등록되었습니다!</div>';
-            successMsg.style.display = 'block';
-            
-            setTimeout(() => {
-                successMsg.style.display = 'none';
-            }, 3000);
-            
-            // 폼 초기화
-            titleInput.value = '';
+            submitBtn.disabled = true;
+            submitBtn.textContent = '등록 중...';
+
+            try {
+                console.log('데이터 저장 시작:', title);
+                
+                const { data, error } = await supabase
+                    .from('newreports')
+                    .insert([
+                        {
+                            title: title,
+                            password: password,
+                            date: getCurrentDateTime()
+                        }
+                    ])
+                    .select();
+
+                if (error) {
+                    console.error('저장 오류:', error);
+                    throw error;
+                }
+
+                console.log('저장 성공:', data);
+
+                if (data && data[0]) {
+                    reports.unshift(data[0]);
+                    // 검색 중이 아니라면 filteredReports도 업데이트
+                    if (document.getElementById('searchInput').value.trim() === '') {
+                        filteredReports.unshift(data[0]);
+                    }
+                    renderReports();
+                    renderPagination();
+                }
+                
+                titleInput.value = '';
+                passwordInput.value = '';
+                
+            } catch (error) {
+                console.error('저장 오류:', error);
+                alert('저장 중 오류가 발생했습니다. 다시 시도해주세요.\n오류: ' + error.message);
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = '📝 등록하기';
+            }
         }
 
         function renderReports() {
             const boardList = document.getElementById('boardList');
             
-            if (reports.length === 0) {
-                boardList.innerHTML = '<div class="no-posts">등록된 제보가 없습니다.</div>';
+            if (filteredReports.length === 0) {
+                // 검색 중인지 확인
+                const isSearching = document.getElementById('searchInput').value.trim() !== '';
+                
+                if (isSearching) {
+                    boardList.innerHTML = '<div class="no-posts">검색결과가 없습니다.</div>';
+                } else {
+                    boardList.innerHTML = '<div class="no-posts">등록된 제보가 없습니다.</div>';
+                }
                 return;
             }
-            
-            boardList.innerHTML = reports.map(report => `
+    
+            // 현재 페이지에 표시할 데이터 계산
+            const startIndex = (currentPage - 1) * itemsPerPage;
+            const endIndex = startIndex + itemsPerPage;
+            const currentReports = filteredReports.slice(startIndex, endIndex);
+    
+            boardList.innerHTML = currentReports.map(report => `
                 <div class="board-item">
-                    <div style="display: flex; align-items: center;">
-                        <span class="board-number">No.${report.id}</span>
-                        <span class="board-title">${report.title || '(제목 없음)'}</span>
+                    <div style="display: flex; align-items: center; width: 100%;">
+                        <span class="board-number">No.${report.id || '?'}</span>
+                        <span class="board-title" style="white-space: pre-wrap;">${report.title || '(제목 없음)'}</span>
+                        <div class="board-actions">
+                            <button class="action-btn edit-btn" data-id="${report.id}" data-title="${(report.title || '').replace(/"/g, '&quot;')}" onclick="openEditModalSafe(this)">수정</button>
+                            <button class="action-btn delete-btn" onclick="openDeleteModal(${report.id})">삭제</button>
+                        </div>
                     </div>
                     <span class="board-date">${report.date}</span>
                 </div>
             `).join('');
         }
 
+        function openEditModal(id, title) {
+            currentEditId = id;
+            document.getElementById('editTitle').value = title.replace(/'/g, "");
+            document.getElementById('editPassword').value = '';
+            document.getElementById('editModal').style.display = 'flex';
+        }
+
+        function openEditModalSafe(button) {
+            const id = button.getAttribute('data-id');
+            const title = button.getAttribute('data-title').replace(/&quot;/g, '"');
+            openEditModal(id, title);
+        }
+
+        function openDeleteModal(id) {
+            currentDeleteId = id;
+            document.getElementById('deletePassword').value = '';
+            document.getElementById('deleteModal').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('editModal').style.display = 'none';
+            document.getElementById('deleteModal').style.display = 'none';
+            currentEditId = null;
+            currentDeleteId = null;
+        }
+
+        async function confirmEdit() {
+            const newTitle = document.getElementById('editTitle').value.trim();
+            const password = document.getElementById('editPassword').value.trim();
+            
+            if (!newTitle) {
+                alert('내용을 입력해주세요.');
+                return;
+            }
+            
+            if (!password) {
+                alert('비밀번호를 입력해주세요.');
+                return;
+            }
+
+            try {
+                // 비밀번호 확인
+                const { data: checkData, error: checkError } = await supabase
+                    .from('newreports')
+                    .select('password')
+                    .eq('id', currentEditId)
+                    .single();
+
+                if (checkError) throw checkError;
+
+                if (checkData.password !== password) {
+                    alert('비밀번호가 일치하지 않습니다.');
+                    return;
+                }
+
+                // 제목 수정
+                const { data, error } = await supabase
+                    .from('newreports')
+                    .update({ 
+                        title: newTitle,
+                        date: getCurrentDateTime() + ' (수정됨)'
+                    })
+                    .eq('id', currentEditId)
+                    .select();
+
+                if (error) throw error;
+
+                // 로컬 배열도 업데이트
+                const reportsIndex = reports.findIndex(r => r.id === currentEditId);
+                const filteredIndex = filteredReports.findIndex(r => r.id === currentEditId);
+                
+                if (reportsIndex !== -1) {
+                    reports[reportsIndex] = { ...reports[reportsIndex], title: newTitle, date: getCurrentDateTime() + ' (수정됨)' };
+                }
+                if (filteredIndex !== -1) {
+                    filteredReports[filteredIndex] = { ...filteredReports[filteredIndex], title: newTitle, date: getCurrentDateTime() + ' (수정됨)' };
+                }
+                
+                renderReports();
+
+                closeModal();
+                alert('수정되었습니다.');
+
+            } catch (error) {
+                console.error('수정 오류:', error);
+                alert('수정 중 오류가 발생했습니다.');
+            }
+        }
+
+        async function confirmDelete() {
+            const password = document.getElementById('deletePassword').value.trim();
+            
+            if (!password) {
+                alert('비밀번호를 입력해주세요.');
+                return;
+            }
+
+            try {
+                // 비밀번호 확인
+                const { data: checkData, error: checkError } = await supabase
+                    .from('newreports')
+                    .select('password')
+                    .eq('id', currentDeleteId)
+                    .single();
+
+                if (checkError) throw checkError;
+
+                if (checkData.password !== password) {
+                    alert('비밀번호가 일치하지 않습니다.');
+                    return;
+                }
+
+                // 게시글 삭제
+                const { error } = await supabase
+                    .from('newreports')
+                    .delete()
+                    .eq('id', currentDeleteId);
+
+                if (error) throw error;
+
+                // 로컬 배열에서도 제거
+                reports = reports.filter(r => r.id !== currentDeleteId);
+                filteredReports = filteredReports.filter(r => r.id !== currentDeleteId);
+                
+                // 현재 페이지에 데이터가 없으면 이전 페이지로
+                const totalPages = Math.ceil(filteredReports.length / itemsPerPage);
+                if (currentPage > totalPages && totalPages > 0) {
+                    currentPage = totalPages;
+                }
+                
+                renderReports();
+                renderPagination();
+
+                closeModal();
+                alert('삭제되었습니다.');
+
+            } catch (error) {
+                console.error('삭제 오류:', error);
+                alert('삭제 중 오류가 발생했습니다.');
+            }
+        }
+
         // 페이지 로드 시 초기화
         document.addEventListener('DOMContentLoaded', function() {
-            renderReports();
+            console.log('페이지 로드 완료, 데이터 로딩 시작');
+            loadReports();
+            // 엔터키 이벤트
+            document.getElementById('title').addEventListener('keydown', function(event) {
+                if (event.key === 'Enter' && !event.shiftKey) {
+                    event.preventDefault();
+                    // 비밀번호 체크 후 전송
+                    const title = document.getElementById('title').value.trim();
+                    const password = document.getElementById('password').value.trim();
+        
+                    if (!title) {
+                        alert('내용을 입력해 주세요.');
+                        return;
+                    }
+        
+                    if (!password) {
+                        alert('비밀번호를 입력해 주세요.');
+                        document.getElementById('password').focus();
+                        return;
+                    }
+
+                    document.getElementById('submitBtn').click();
+                }
+            });
+
+            // 자동 높이 조절
+            document.getElementById('title').addEventListener('input', function() {
+                this.style.height = 'auto';
+                this.style.height = this.scrollHeight + 'px';
+            });
         });
+
+        // 실시간 업데이트
+        supabase
+            .channel('newreports_channel')
+            .on('postgres_changes', 
+                { event: 'INSERT', schema: 'public', table: 'newreports' }, 
+                (payload) => {
+                    console.log('새 게시글 실시간 수신:', payload.new);
+                    reports.unshift(payload.new);
+                    // 검색 중이 아니라면 filteredReports도 업데이트
+                    if (document.getElementById('searchInput').value.trim() === '') {
+                        filteredReports.unshift(payload.new);
+                    }
+                    renderReports();
+                    renderPagination();
+                }
+            )
+            .on('postgres_changes', 
+                { event: 'UPDATE', schema: 'public', table: 'newreports' }, 
+                (payload) => {
+                    console.log('게시글 수정 실시간 수신:', payload.new);
+                    const reportsIndex = reports.findIndex(r => r.id === payload.new.id);
+                    const filteredIndex = filteredReports.findIndex(r => r.id === payload.new.id);
+                    
+                    if (reportsIndex !== -1) {
+                        reports[reportsIndex] = payload.new;
+                    }
+                    if (filteredIndex !== -1) {
+                        filteredReports[filteredIndex] = payload.new;
+                    }
+                    
+                    renderReports();
+                }
+            )
+            .on('postgres_changes', 
+                { event: 'DELETE', schema: 'public', table: 'newreports' }, 
+                (payload) => {
+                    console.log('게시글 삭제 실시간 수신:', payload.old);
+                    reports = reports.filter(r => r.id !== payload.old.id);
+                    filteredReports = filteredReports.filter(r => r.id !== payload.old.id);
+                    
+                    // 현재 페이지에 데이터가 없으면 이전 페이지로
+                    const totalPages = Math.ceil(filteredReports.length / itemsPerPage);
+                    if (currentPage > totalPages && totalPages > 0) {
+                        currentPage = totalPages;
+                    }
+                    
+                    renderReports();
+                    renderPagination();
+                }
+            )
+            .subscribe();
+
+        // 모달 외부 클릭시 닫기
+        window.onclick = function(event) {
+            const editModal = document.getElementById('editModal');
+            const deleteModal = document.getElementById('deleteModal');
+            if (event.target === editModal || event.target === deleteModal) {
+                closeModal();
+            }
+        }
     </script>
 </body>
 </html>
