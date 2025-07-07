@@ -789,9 +789,9 @@ body {
   
   .market-item {
     font-size: 10px;
-    padding: 5px 8px;
+    padding: 2px 5px;
     max-width: calc(50% - 2px);
-    min-height: 24px;
+    min-height: 16px;
   }
   
   .section-content {
@@ -832,9 +832,9 @@ body {
   
   .market-item {
     font-size: 9px;
-    padding: 4px 6px;
+    padding: 1px 4px;
     max-width: 100%;
-    min-height: 24px;
+    min-height: 16px;
   }
   
   .scam-markets-list {
