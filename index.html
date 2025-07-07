@@ -231,6 +231,7 @@
         let notices = [];
         const ADMIN_PASSWORD = "sp23-e933-w112";
         const RECEIVER_EMAIL = 'your-email@gmail.com'; // 여기에 본인 이메일 입력
+        let currentItemIndex = -1;
         
         const SUPABASE_URL = 'https://rmulijeebyohilnyqkev.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJtdWxpamVlYnlvaGlsbnlxa2V2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE3MTAwODMsImV4cCI6MjA2NzI4NjA4M30.Cf4mZutF14QVT7bfY1GJk6iBkKT8ALUA0uGkvLHKWDg';
@@ -337,6 +338,8 @@
             
             element.classList.add('active');
 
+            currentItemIndex = Array.from(selectableItems).indexOf(element);
+
             const clickedIndex = Array.from(selectableItems).indexOf(element);
             if (clickedIndex !== -1) {
                 currentSelectedIndex = clickedIndex;
@@ -388,6 +391,7 @@
                 
                 container.classList.add('panel-open');
                 rightPanel.classList.add('show');
+                updateNavigationButtons();
                 
                 // 사진 업로드 기능이 포함된 경우 이벤트 리스너 다시 등록
                 if (type === 'stolen_photo') {
@@ -431,6 +435,8 @@
             
             container.classList.remove('panel-open');
             rightPanel.classList.remove('show');
+
+            currentItemIndex = -1; 
 
             // 키보드 이벤트 리스너 제거
             document.removeEventListener('keydown', handleSliderKeyboard);
@@ -948,6 +954,8 @@ ${message}
 
                 selectedItem.click();
 
+                currentItemIndex = currentSelectedIndex;
+                updateNavigationButtons();
                 
             }
         }
@@ -975,6 +983,50 @@ ${message}
         initKeyboardNavigation();
         
         // ⬆️⬆️⬆️ 여기까지 키보드 네비게이션 코드 추가 ⬆️⬆️⬆️
+
+        // 네비게이션 버튼 상태 업데이트
+        function updateNavigationButtons() {
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            
+            if (!prevBtn || !nextBtn) return;
+            
+            // 이전 버튼 상태
+            if (currentItemIndex <= 0) {
+                prevBtn.disabled = true;
+            } else {
+                prevBtn.disabled = false;
+            }
+            
+            // 다음 버튼 상태
+            if (currentItemIndex >= selectableItems.length - 1) {
+                nextBtn.disabled = true;
+            } else {
+                nextBtn.disabled = false;
+            }
+        }
+
+        // 이전 항목으로 이동
+        function navigateToPrevious() {
+            if (currentItemIndex > 0) {
+                currentItemIndex--;
+                const prevItem = selectableItems[currentItemIndex];
+                prevItem.click();
+                updateNavigationButtons();
+            }
+        }
+
+        // 다음 항목으로 이동
+        function navigateToNext() {
+            if (currentItemIndex < selectableItems.length - 1) {
+                currentItemIndex++;
+                const nextItem = selectableItems[currentItemIndex];
+                nextItem.click();
+                updateNavigationButtons();
+            }
+        }
+        
+        // ↑↑↑ 여기까지 새로운 함수들 ↑↑↑
     </script>
     <div class="footer">
         <p>Copyright © 2025 sagitapa. All rights reserved.</p>
