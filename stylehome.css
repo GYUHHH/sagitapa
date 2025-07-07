@@ -877,6 +877,21 @@ body {
     padding: 1px 2px;
     min-height: 10px;
   }
+
+  .form-group input,
+  .form-group textarea {
+    padding: 6px 6px;
+    font-size: 16px !important;
+  }
+  
+  .form-group textarea {
+    min-height: 50px;
+  }
+  
+  .form-group label {
+    font-size: 11px;
+    margin-bottom: 3px;
+  }
 }
 
 /* ===== 푸터 ===== */
