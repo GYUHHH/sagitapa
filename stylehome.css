@@ -791,6 +791,7 @@ body {
     font-size: 10px;
     padding: 5px 8px;
     max-width: calc(50% - 2px);
+    min-height: 24px;
   }
   
   .section-content {
@@ -833,6 +834,7 @@ body {
     font-size: 9px;
     padding: 4px 6px;
     max-width: 100%;
+    min-height: 24px;
   }
   
   .scam-markets-list {
@@ -965,6 +967,7 @@ body {
     border-radius: 12px;
     font-size: 11px;
     gap: 5px;
+    min-height: 24px; 
     max-width: calc(50% - 3px); /* 추가: 2열 강제 */
     box-sizing: border-box; /* 추가 */
     text-overflow: ellipsis; /* 추가 */
