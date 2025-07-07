@@ -115,6 +115,10 @@ body {
 
 .section-content {
   padding: 15px;
+  word-wrap: break-word;
+  word-break: keep-all;
+  overflow-wrap: break-word;
+  hyphens: auto;
 }
 
 /* ===== 아이템 스타일 ===== */
@@ -778,6 +782,28 @@ body {
     max-width: 300px;
     margin: 0 15px;
   }
+
+  .scam-markets-list {
+    gap: 4px;
+  }
+  
+  .market-item {
+    font-size: 10px;
+    padding: 5px 8px;
+    max-width: calc(50% - 2px);
+  }
+  
+  .section-content {
+    padding: 8px;
+    line-height: 1.5;
+  }
+  
+  .item-text {
+    font-size: 12px;
+    line-height: 1.4;
+    word-break: break-word;
+    overflow-wrap: break-word;
+  }
 }
 
 /* ===== 더 작은 화면 ===== */
@@ -801,6 +827,16 @@ body {
   .section-header {
     font-size: 11px;
     padding: 8px 10px;
+  }
+  
+  .market-item {
+    font-size: 9px;
+    padding: 4px 6px;
+    max-width: 100%;
+  }
+  
+  .scam-markets-list {
+    flex-direction: column;
   }
 }
 
@@ -916,7 +952,8 @@ body {
     margin-bottom: 15px;
     display: flex;
     flex-wrap: wrap;
-    gap: 8px;
+    gap: 6px;
+    justify-content: flex-start;
 }
 
 .market-item {
@@ -924,10 +961,15 @@ body {
     align-items: center;
     background: #dc3545;
     color: white;
-    padding: 4px 8px;
+    padding: 6px 10px;
     border-radius: 12px;
     font-size: 11px;
     gap: 5px;
+    max-width: calc(50% - 3px); /* 추가: 2열 강제 */
+    box-sizing: border-box; /* 추가 */
+    text-overflow: ellipsis; /* 추가 */
+    overflow: hidden; /* 추가 */
+    white-space: nowrap; /* 추가 */
 }
 
 .market-name {
