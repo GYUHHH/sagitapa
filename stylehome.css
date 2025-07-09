@@ -448,7 +448,7 @@ body {
   padding: 6px 12px;
   cursor: pointer;
   font-size: 11px;
-  border-radius: 3px;
+  border-radius: 0;
   margin: 3px;
 }
 
@@ -491,6 +491,8 @@ body {
 .form-group textarea,
 .admin-input {
   width: 100%;
+  margin-left: auto; /* 중앙 정렬 */
+  margin-right: auto; /* 중앙 정렬 */
   padding: 6px;
   border: 1px solid #ccc;
   font-size: 11px;
@@ -1064,33 +1066,40 @@ body {
   }
 
   .form-group {
+    margin-top: 8px;
+    max-width: 95%;
+    margin-left: auto; /* 중앙 정렬 */
+    margin-right: auto; /* 중앙 정렬 */
     margin-bottom: 10px;
   }
   
-  .form-group input,
-  .form-group textarea {
+  .form-group input {
     padding: 8px 8px;
     font-size: 16px !important;
-    border-radius: 4px;
+    height: 25px;               /* 고정 높이 추가 */
+    box-sizing: border-box; 
   }
   
   .form-group textarea {
-    min-height: 60px;
+    max-height: 30px;
   }
   
   .form-group textarea::placeholder {
-    font-size: 10px;
+    font-size: 12px;
   }
   
   .form-group label {
-    font-size: 12px;
+    font-size: 11px;
     margin-bottom: 4px;
   }
   
   .submit-btn {
-    padding: 10px 14px;
-    font-size: 14px;
+    padding: 0px 10px;
+    margin-left: 8px;
+    font-size: 10px;
     border-radius: 0;
+    width: auto;            /* 너비 자동 조정 */
+    min-height: 26px;       /* 최소 높이 줄임 */
   }
   
   /* 모달 */
@@ -1158,7 +1167,7 @@ body {
   }
   
   .form-group textarea {
-    min-height: 50px;
+    min-height: 80px;
   }
   
   .form-group label {
