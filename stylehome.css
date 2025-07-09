@@ -139,6 +139,7 @@ body {
   background-color: #fff;
   border-left: 3px solid #4a90e2;
   outline: none;
+  padding-right: 35px;
 }
 
 .item.clickable:hover {
