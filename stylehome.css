@@ -181,7 +181,7 @@ body {
 }
 
 .item-text {
-  font-size: 12px;
+  font-size: 13px;
   color: #333;
   line-height: 1.4;
   word-wrap: break-word;
@@ -250,7 +250,7 @@ body {
 }
 
 .example-title {
-  font-size: 14px;
+  font-size: 16px;
   font-weight: bold;
   color: #2e5c87;
   margin-bottom: 15px;
@@ -267,7 +267,7 @@ body {
 }
 
 .example-description {
-  font-size: 12px;
+  font-size: 13px;
   color: #555;
   line-height: 1.5;
   background-color: #f9f9f9;
@@ -985,7 +985,7 @@ body {
   }
   
   .item-text {
-    font-size: 12px;
+    font-size: 13px;
     line-height: 1.4;
     word-break: break-word;
     overflow-wrap: break-word;
@@ -1050,11 +1050,11 @@ body {
   }
   
   .example-title {
-    font-size: 13px;
+    font-size: 16px;
   }
   
   .example-description {
-    font-size: 11px;
+    font-size: 13px;
     padding: 10px;
   }
   
@@ -1156,7 +1156,7 @@ body {
   }
   
   .item-text {
-    font-size: 12px;
+    font-size: 13px;
   }
   
   .section-header {
