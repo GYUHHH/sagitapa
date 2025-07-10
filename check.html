@@ -57,7 +57,10 @@
                             <span id="riskScore">0%</span>
                         </div>
                     </div>
-                    <button class="restart-btn" onclick="restartCheck()">다시 검사하기</button>
+                    <div style="display: flex; gap: 10px; justify-content: center;">
+                        <button class="restart-btn" onclick="restartCheck()">다시 검사하기</button>
+                        <button class="restart-btn" onclick="tryCloseWindow()" style="background: #adb5bd; color: #333;">창 닫기</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -354,6 +357,15 @@
             document.getElementById('questionCard').style.display = 'block';
             document.getElementById('resultContainer').style.display = 'none';
             showQuestion();
+        }
+
+        function tryCloseWindow() {
+            window.close();
+            setTimeout(function() {
+                if (!window.closed) {
+                    alert('이 탭은 브라우저 정책상 자동으로 닫을 수 없습니다. 직접 닫아주세요.');
+                }
+            }, 300);
         }
 
         // 초기화 함수
