@@ -248,6 +248,7 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="admin-config.js"></script>
     
     <script>
         // 전역 변수들
@@ -255,7 +256,7 @@
         const googleLensBtn = document.getElementById('googleLensBtn');
         let uploadedImageUrl = null;
         let notices = [];
-        const ADMIN_PASSWORD = "sp23-e933-w112";
+        const ADMIN_PASSWORD = window.ADMIN_PASSWORD;
         const RECEIVER_EMAIL = 'your-email@gmail.com'; // 여기에 본인 이메일 입력
         let currentItemIndex = -1;
         
