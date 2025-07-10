@@ -134,20 +134,24 @@ body {
 }
 
 .link-button {
-  display: inline-block;
-  padding: 8px 16px;
-  margin: 5px 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  max-width: 320px;
+  min-width: 0;
+  padding: 12px 8px;
+  margin: 6px auto;
   background: #f8f9fa;
   color: #495057;
   border: 1px solid #ced4da;
   border-radius: 4px;
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 400;
   cursor: pointer;
   transition: all 0.2s ease;
   text-decoration: none;
-  white-space: nowrap;
-  
+  white-space: nowrap; /* 한 줄로 표시 */
 }
 
 .link-button:hover {
@@ -459,10 +463,16 @@ body {
   }
 
   .link-button {
-    display: block;
-    width: 80%;
-    padding: 14px;
-    font-size: 13px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    max-width: 320px;
+    min-width: 0;
+    padding: 12px 8px;
+    font-size: 15px;
+    margin: 6px auto;
+    white-space: nowrap; /* 한 줄로 표시 */
   }
 
   .answer-buttons {
@@ -550,10 +560,14 @@ body {
   }
 
   .link-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     width: 90%;
     padding: 10px;
     font-size: 12px;
     margin: 6px auto; /* 8px → 6px로 줄임 */
+    white-space: nowrap; /* 한 줄로 표시 */
   }
 
   .answer-buttons {
@@ -663,6 +677,10 @@ body {
 
   .link-button {
     margin: 4px auto; /* 링크 버튼 간격도 줄임 */
+    text-align: center;
+    white-space: nowrap; /* 한 줄로 표시 */
+    overflow: hidden;    /* 넘치는 부분 숨김 */
+    text-overflow: ellipsis; /* ... 처리 */
   }
 
   .question-text {
