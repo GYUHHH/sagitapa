@@ -162,9 +162,8 @@
             if (currentQuestion < questions.length) {
                 const question = questions[currentQuestion];
                 document.getElementById('questionText').innerHTML = question.text;
-                // 기존 이미지/슬라이더 제거
-                const oldSlider = document.querySelector('.question-image-slider');
-                if (oldSlider) oldSlider.remove();
+                // 기존 이미지/슬라이더 모두 제거
+                document.querySelectorAll('.question-image-slider').forEach(el => el.remove());
                 const existingImage = document.querySelector('.question-image');
                 if (existingImage) existingImage.remove();
                 // 링크 컨테이너 업데이트
