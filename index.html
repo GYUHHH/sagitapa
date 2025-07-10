@@ -3,16 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>사기타파 - 중고거래 사기 여부 자가진단 | 안전한 중고거래</title>
-    <meta name="description" content="내 중고거래, 혹시 사기는 아닐까? 중고나라, 번개장터, 당근 등 중고거래 시에 필수 체크리스트를 확인하고 내 중고거래의 안전을 지키세요. 중고거래 입문자 및 숙련자 모두에게 유용합니다.">
+    <title>사기타파 - 중고거래 사기 예방을 위해 | 안전한 중고거래</title>
+    <meta name="description" content="중고거래 입금 전 확인하세요. 중고나라, 번개장터, 당근 등 안전한 거래를 위한 필수 확인사항과 사기 수법 정보를 제공합니다. 최신 업데이트를 반영하니 거래 전 반드시 확인하여 사기를 예방합니다.">
     <meta name="keywords" content="중고거래, 사기예방, 당근마켓, 중고나라, 안전거래, 사기수법, 체크리스트, 중고거래 사기, 중고 사기, 사기꾼">
     <meta name="author" content="사기타파">
 
     <meta name="naver-site-verification" content="aea33d1430837b165bd690d8b8df058dc2a79921">
     
     <!-- Open Graph (소셜 미디어) -->
-    <meta property="og:title" content="사기타파 - 중고거래 사기 여부 자가진단 | 안전한 중고거래">
-    <meta property="og:description" content="내 중고거래, 혹시 사기는 아닐까? 중고나라, 번개장터, 당근 등 중고거래 시에 필수 체크리스트를 확인하고 내 중고거래의 안전을 지키세요. 중고거래 입문자 및 숙련자 모두에게 유용합니다.">
+    <meta property="og:title" content="사기타파 - 중고거래 사기 예방을 위해">
+    <meta property="og:description" content="중고거래 입금 전 확인하세요. 중고거래 사기는 예방이 최우선입니다.">
     <meta property="og:url" content="https://sagitapa.com">
     <meta property="og:type" content="website">
     
@@ -21,9 +21,9 @@
     {
         "@context": "https://schema.org",
         "@type": "WebSite",
-        "name": "사기타파 - 중고거래 사기 자가진단",
+        "name": "사기타파 - 중고거래 사기 예방 | 안전한 중고거래",
         "url": "https://sagitapa.com",
-        "description": "내 중고거래, 혹시 사기는 아닐까? 중고나라, 번개장터, 당근 등 중고거래 시에 필수 체크리스트를 확인하고 내 중고거래의 안전을 지키세요. 중고거래 입문자 및 숙련자 모두에게 유용합니다."
+        "description": "중고거래 입금 전 확인하세요. 중고나라, 번개장터, 당근 등 안전한 거래를 위한 필수 확인사항과 사기 수법 정보를 제공합니다. 최신 업데이트를 반영하니 거래 전 반드시 확인하여 사기를 예방합니다."
     }
     </script>
     
@@ -53,7 +53,6 @@
 
         <div class="main-content">
             <div class="left-panel">
-                <!-- 사기 신고 내역 확인을 맨 위로 이동 -->
                 <div class="section">
                     <div class="section-header">사기 신고 내역 확인</div>
                     <div class="section-content">
@@ -1057,11 +1056,58 @@
                 updateNavigationButtons();
             }
         }
+
+                // 페이지 로드 시 팝업 표시
+        window.addEventListener('load', function() {
+            // 페이지가 완전히 로드된 후 약간의 지연을 두고 팝업 표시
+            setTimeout(showInitialPopup, 500);
+        });
+
+        // 초기 팝업 표시
+        function showInitialPopup() {
+            const popup = document.getElementById('initialPopup');
+            popup.classList.add('show');
+            
+            // body 스크롤 방지
+            document.body.style.overflow = 'hidden';
+        }
+
+        // 초기 팝업 닫기
+        function closeInitialPopup() {
+            const popup = document.getElementById('initialPopup');
+            popup.classList.remove('show');
+            
+            // body 스크롤 복원
+            document.body.style.overflow = '';
+        }
+
+        // 자가진단 페이지로 이동
+        function goToCheck() {
+            window.location.href = 'check.html';
+        }
         
         // ↑↑↑ 여기까지 새로운 함수들 ↑↑↑
+
+
     </script>
     <div class="footer">
         <p>Copyright © 2025 sagitapa. All rights reserved.</p>
     </div>
+
+    <div class="initial-popup-overlay" id="initialPopup">
+        <div class="initial-popup-content">
+            <div class="initial-popup-header">
+                <h2>사기 때문에 내 중고거래가 불안하다면?</h2>
+            </div>
+            <div class="initial-popup-body">
+                <p>안전한 중고거래를 위해 <br>입금 전 필수 체크사항들을 자가진단하세요.</p>
+            </div>
+            <div class="initial-popup-footer">
+                <button class="popup-btn secondary" onclick="closeInitialPopup()">나중에 하기</button>
+                <button class="popup-btn primary" onclick="goToCheck()">자가진단하러가기</button>
+            </div>
+        </div>
+    </div>
+
 </body>
 </html>
