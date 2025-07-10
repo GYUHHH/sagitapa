@@ -295,35 +295,45 @@
         function showResult() {
             document.getElementById('questionCard').style.display = 'none';
             document.getElementById('resultContainer').style.display = 'block';
-            
-            // 최종 위험도 점수 계산 (답변하지 않은 항목은 제외)
+
+            const criticalIndexes = [0, 1, 3, 4, 5, 6, 7];
             const answeredQuestions = answers.filter(a => a !== undefined);
             const yesAnswers = answers.filter(a => a === true).length;
-            riskScore = yesAnswers;
-            
-            let riskPercentage = 0;
-            if (answeredQuestions.length > 0) {
-                riskPercentage = Math.round((yesAnswers / answeredQuestions.length) * 100);
-            }
-            
-            let riskLevel, riskClass, description;
+            let riskLevel, riskClass, description, riskPercentage;
 
-            if (riskPercentage >= 60) {
-                riskLevel = "위험도: 매우 높음";
+            // 치명적 신호(criticalIndexes) 중 하나라도 true면 100% 사기
+            let isCritical = false;
+            for (let i = 0; i < criticalIndexes.length; i++) {
+                if (answers[criticalIndexes[i]] === true) {
+                    isCritical = true;
+                    break;
+                }
+            }
+
+            // 나머지 인덱스 중 하나라도 true면 위험 높음
+            let isHigh = false;
+            for (let i = 0; i < answers.length; i++) {
+                if (!criticalIndexes.includes(i) && answers[i] === true) {
+                    isHigh = true;
+                    break;
+                }
+            }
+
+            if (isCritical) {
+                riskLevel = "100% 사기입니다";
                 riskClass = "risk-high";
-                description = "⚠️ 다수의 사기 신호가 감지되었습니다. 즉시 거래를 중단하고 관련 기관에 신고하시기 바랍니다. 절대 추가 입금이나 개인정보를 제공하지 마세요.";
-            } else if (riskPercentage >= 30) {
-                riskLevel = "위험도: 높음";
+                description = "⚠️ 치명적인 사기 신호가 감지되었습니다. 즉시 거래를 중단하고 관련 기관에 신고하세요. 절대 추가 입금이나 개인정보를 제공하지 마세요.";
+                riskPercentage = 100;
+            } else if (isHigh) {
+                riskLevel = "사기 위험 높음";
                 riskClass = "risk-medium";
-                description = "⚠️ 여러 사기 신호가 감지되었습니다. 거래를 중단하고 신중하게 검토하시기 바랍니다. 가족이나 지인과 상의 후 결정하세요.";
-            } else if (riskPercentage >= 10) {
-                riskLevel = "위험도: 보통";
-                riskClass = "risk-medium";
-                description = "⚠️ 일부 의심스러운 신호가 있습니다. 추가로 확인하고 주의 깊게 거래를 진행하세요. 의심스러운 부분이 있다면 거래를 중단하세요.";
+                description = "⚠️ 사기 위험 신호가 감지되었습니다. 거래를 중단하고 신중하게 검토하세요. 가족이나 지인과 상의 후 결정하세요.";
+                riskPercentage = 80;
             } else {
                 riskLevel = "위험도: 낮음";
                 riskClass = "risk-low";
                 description = "✅ 현재까지는 큰 위험 신호가 감지되지 않았습니다. 하지만 항상 주의하며 거래하시고, 이상한 점이 발견되면 즉시 거래를 중단하세요.";
+                riskPercentage = 0;
             }
 
             document.getElementById('riskLevel').textContent = riskLevel;
@@ -332,7 +342,7 @@
             document.getElementById('totalQuestions').textContent = `${answeredQuestions.length} (답변된 문항)`;
             document.getElementById('riskCount').textContent = yesAnswers;
             document.getElementById('riskScore').textContent = riskPercentage + '%';
-            
+
             // 진행률을 100%로 설정
             document.getElementById('progressFill').style.width = '100%';
             document.getElementById('progressText').textContent = `완료!`;
