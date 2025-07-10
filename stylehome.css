@@ -935,6 +935,112 @@ body {
   text-decoration: underline;
 }
 
+.initial-popup-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10000;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+
+.initial-popup-overlay.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+.initial-popup-content {
+    background: white;
+    border-radius: 0;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    max-width: 480px;
+    width: 90%;
+    max-height: 90vh;
+    overflow: auto;
+    animation: popupSlideIn 0.4s ease-out;
+}
+
+@keyframes popupSlideIn {
+    from {
+        transform: scale(0.8) translateY(-20px);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1) translateY(0);
+        opacity: 1;
+    }
+}
+
+.initial-popup-header {
+    padding: 24px 24px 12px 24px;
+    border-bottom: 1px solid #eee;
+}
+
+.initial-popup-header h2 {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 600;
+    color: #333;
+    text-align: center;
+}
+
+.initial-popup-body {
+    padding: 20px 24px;
+    text-align: center;
+}
+
+.initial-popup-body p {
+    margin: 0;
+    font-size: 16px;
+    color: #666;
+    line-height: 1.5;
+}
+
+.initial-popup-footer {
+    padding: 12px 24px 24px 24px;
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+}
+
+.popup-btn {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 0;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    min-width: 120px;
+}
+
+.popup-btn.primary {
+    background-color: #e33030;
+    color: white;
+}
+
+.popup-btn.primary:hover {
+    background-color: #ff5252;
+    transform: translateY(-1px);
+}
+
+.popup-btn.secondary {
+    background-color: #f8f9fa;
+    color: #666;
+    border: 1px solid #ddd;
+}
+
+.popup-btn.secondary:hover {
+    background-color: #e9ecef;
+}
+
 /* ===== 모바일 반응형 ===== */
 @media (max-width: 768px) {
   .container {
@@ -1139,6 +1245,27 @@ body {
     font-size: 12px;   /* 버튼 글씨 크기 늘림 */
     min-height: unset !important;
   }
+
+  .initial-popup-content {
+        margin: 20px;
+        width: calc(100% - 40px);
+    }
+    
+    .initial-popup-header h2 {
+        font-size: 18px;
+    }
+    
+    .initial-popup-body p {
+        font-size: 14px;
+    }
+    
+    .initial-popup-footer {
+        flex-direction: column;
+    }
+    
+    .popup-btn {
+        width: 100%;
+    }
 }
 
 /* ===== 더 작은 화면 ===== */
