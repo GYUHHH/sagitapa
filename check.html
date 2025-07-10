@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>사기 위험도 체크</title>
+    <link rel="stylesheet" href="stylecheck.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔍 사기 위험도 체크</h1>
+        </div>
+
+        <div class="progress-container">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div class="progress-text" id="progressText">1 / 16</div>
+        </div>
+
+        <div class="main-content">
+            <div class="question-card" id="questionCard">
+                <div class="question-text" id="questionText">
+                    <span class="danger-text">더치트에서</span> 이름 또는 전화번호가 검색되나요?
+                </div>
+                <div class="links-container" id="linksContainer" style="display: none;">
+                    <div id="linksList"></div>
+                </div>
+                <div class="answer-buttons">
+                    <button class="answer-btn yes" onclick="answerQuestion(true)">예</button>
+                    <button class="answer-btn no" onclick="answerQuestion(false)">아니오</button>
+                </div>
+                <div class="navigation-buttons">
+                    <button class="nav-button prev" id="prevBtn" onclick="previousQuestion()" disabled>‹</button>
+                    <button class="nav-button next" id="nextBtn" onclick="nextQuestion()" disabled>›</button>
+                </div>
+            </div>
+
+            <div class="result-container" id="resultContainer">
+                <div class="result-card">
+                    <div class="risk-level" id="riskLevel">위험도: 높음</div>
+                    <div class="result-description" id="resultDescription">
+                        여러 사기 신호가 감지되었습니다. 거래를 중단하고 신중하게 검토하시기 바랍니다.
+                    </div>
+                    <div class="result-stats">
+                        <div class="stat-item">
+                            <span>총 문항 수:</span>
+                            <span id="totalQuestions">16</span>
+                        </div>
+                        <div class="stat-item">
+                            <span>위험 신호 감지:</span>
+                            <span id="riskCount">0</span>
+                        </div>
+                        <div class="stat-item">
+                            <span>위험도 점수:</span>
+                            <span id="riskScore">0%</span>
+                        </div>
+                    </div>
+                    <button class="restart-btn" onclick="restartCheck()">다시 검사하기</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                text: '<span class="danger-text">더치트에서</span> 이름 또는 전화번호가 검색되나요?',
+                image: 'images/thecheat.png',
+                links: [
+                    { text: '더치트 사이트 조회', url: 'https://thecheat.co.kr/rb/?mod=_search' }
+                ]
+            },
+            {
+                text: '<span class="danger-text">사기 신고 카페</span>에서 이름 또는 전화번호가 검색되나요?',
+                image: 'images/cafe.png',
+                links: [
+                    { text: '사기나라 카페', url: 'https://cafe.naver.com/saginara' },
+                    { text: '중고거래사기피해 카페', url: 'https://cafe.naver.com/killer1818' }
+                ]
+            },
+            {
+                text: '지역이 너무 멀다면서 <span class="danger-text">택배 거래</span>로 유도하나요?',
+                image: ' '
+            },
+            {
+                text: '전화번호가 아닌 <span class="danger-text">카카오톡이나 텔레그램</span> 등 <br>다른 메신저로 유도하나요?',
+                image: ['images/kakao.png', 'images/kakao2.png']
+            },
+            {
+                text: '<span class="danger-text">안전거래 사이트 링크</span>를 주고 <br>다른 사이트에서 결제하라고 하나요?',
+                image: ['images/safe1.png', 'images/safe2.png', 'images/safe3.png', 'images/safe4.jpg', 'images/safe5.png']
+            },
+            {
+                text: '<span class="danger-text">다른 쇼핑몰 사이트에 등록</span>해달라고 유도하나요?',
+                image: ' ',
+            },
+            {
+                text: '포인트를 써야 한다면서<br> <span class="danger-text">다른 웹사이트에 등록</span>하라고 유도하나요?',
+                image: ['images/point.jpg', 'images/fakesite2.jpg']
+            },
+            {
+                text: '입금했는데 갖가지 이유를 들며 <br><span class="danger-text">재입금을 유도</span>하나요?',
+                image: ['images/again1.png', 'images/again2.png', 'images/again3.png', 'images/again4.png', 'images/again5.jpg', 'images/again6.png']
+            },
+            {
+                text: '프로필을 보면 <span class="danger-text">가입한 지 얼마되지 않았는데 <br>물건이 갑자기 많이 올라온</span> 이용자인가요?',
+                image: 'images/early.jpg'
+            },
+            {
+                text: '프로필을 보면 거래 기록 내역이 <br><span class="danger-text"> 몇 년 간 없다가 다시 생겼나요?</span>',
+                image: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZGRkIi8+CiAgPHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzk5OSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPuyCiOyLnCDsnbTrr4jsp4A8L3RleHQ+Cjwvc3ZnPg=='
+            },
+            {
+                text: '거래 관련 연락 시 <br><span class="danger-text">사장님</span>이라는 호칭을 사용하나요?',
+                image: 'images/sajang.jpeg'
+            },
+            {
+                text: '인증 목적으로 <span class="danger-text">신분증</span>을 보여줬나요?',
+                image: 'images/id.png'
+            },
+            {
+                text: '사진이 <span class="danger-text">오늘 찍힌 것이</span> 아닌가요? <br>(사진 정보에서 확인 가능)',
+                image: 'images/photodate.png'
+            },
+            {
+                text: '사진이 <span class="danger-text">합성</span>인 것 같나요?',
+                image: ['images/fakephoto1.png', 'images/fakephoto2.png'],
+                links: [
+                    { text: '사진 합성 확인 바로가기', url: 'https://fotoforensics.com/' }
+                ]
+            },
+            {
+                text: '사진이 <span class="danger-text">도용</span>된 것 같나요?',
+                image: 'images/howtogoogleimage.png',
+                links: [
+                    { text: '구글 이미지 검색', url: 'https://images.google.com/' }
+                ]
+            }
+        ];
+
+        let currentQuestion = 0;
+        let answers = [];
+        let riskScore = 0;
+
+        function updateProgress() {
+            const progress = ((currentQuestion + 1) / questions.length) * 100;
+            document.getElementById('progressFill').style.width = progress + '%';
+            document.getElementById('progressText').textContent = `${currentQuestion + 1} / ${questions.length}`;
+        }
+
+        function updateNavigationButtons() {
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            
+            prevBtn.disabled = currentQuestion === 0;
+            nextBtn.disabled = currentQuestion >= questions.length - 1;
+        }
+
+        function showQuestion() {
+            if (currentQuestion < questions.length) {
+                const question = questions[currentQuestion];
+                document.getElementById('questionText').innerHTML = question.text;
+                // 기존 이미지/슬라이더 제거
+                const oldSlider = document.querySelector('.question-image-slider');
+                if (oldSlider) oldSlider.remove();
+                const existingImage = document.querySelector('.question-image');
+                if (existingImage) existingImage.remove();
+                // 링크 컨테이너 업데이트
+                const linksContainer = document.getElementById('linksContainer');
+                const linksList = document.getElementById('linksList');
+                if (question.links && question.links.length > 0) {
+                    linksList.innerHTML = '';
+                    question.links.forEach(link => {
+                        const linkButton = document.createElement('button');
+                        linkButton.textContent = link.text;
+                        linkButton.className = 'link-button';
+                        linkButton.onclick = () => window.open(link.url, '_blank');
+                        linksList.appendChild(linkButton);
+                    });
+                    linksContainer.style.display = 'block';
+                } else {
+                    linksContainer.style.display = 'none';
+                }
+                // 이미지(슬라이더) 추가 또는 빈 영역 유지
+                let images = [];
+                if (question.image) {
+                    images = Array.isArray(question.image) ? question.image : [question.image];
+                    images = images.filter(img => img && img.trim() !== '');
+                }
+                const slider = document.createElement('div');
+                slider.className = 'question-image-slider' + (images.length === 0 ? ' empty' : '');
+                if (images.length === 1) {
+                    const img = document.createElement('img');
+                    img.src = images[0];
+                    img.className = 'slider-image active';
+                    img.alt = '질문 관련 예시 이미지';
+                    slider.appendChild(img);
+                } else if (images.length > 1) {
+                    images.forEach((src, idx) => {
+                        const img = document.createElement('img');
+                        img.src = src;
+                        img.className = 'slider-image' + (idx === 0 ? ' active' : '');
+                        img.alt = '질문 관련 예시 이미지';
+                        slider.appendChild(img);
+                    });
+                    // 좌우 버튼
+                    const controls = document.createElement('div');
+                    controls.className = 'slider-controls';
+                    const prevBtn = document.createElement('button');
+                    prevBtn.className = 'slider-btn';
+                    prevBtn.innerHTML = '‹';
+                    prevBtn.onclick = (e) => {
+                        e.stopPropagation();
+                        moveSlider(-1);
+                    };
+                    const nextBtn = document.createElement('button');
+                    nextBtn.className = 'slider-btn';
+                    nextBtn.innerHTML = '›';
+                    nextBtn.onclick = (e) => {
+                        e.stopPropagation();
+                        moveSlider(1);
+                    };
+                    controls.appendChild(prevBtn);
+                    controls.appendChild(nextBtn);
+                    slider.appendChild(controls);
+                    // 인디케이터
+                    const indicator = document.createElement('div');
+                    indicator.className = 'slider-indicator';
+                    indicator.textContent = `1 / ${images.length}`;
+                    slider.appendChild(indicator);
+                    // 상태 저장
+                    let currentIdx = 0;
+                    function moveSlider(dir) {
+                        const imgs = slider.querySelectorAll('.slider-image');
+                        imgs[currentIdx].classList.remove('active');
+                        currentIdx = (currentIdx + dir + images.length) % images.length;
+                        imgs[currentIdx].classList.add('active');
+                        indicator.textContent = `${currentIdx + 1} / ${images.length}`;
+                    }
+                    // 키보드 좌우 이동
+                    slider.tabIndex = 0;
+                    slider.onkeydown = function(e) {
+                        if (e.key === 'ArrowLeft') { moveSlider(-1); }
+                        if (e.key === 'ArrowRight') { moveSlider(1); }
+                    };
+                    // 포커스 자동
+                    setTimeout(() => slider.focus(), 100);
+                }
+                // 이미지가 없더라도 항상 영역 유지
+                linksContainer.parentNode.insertBefore(slider, linksContainer.nextSibling);
+                updateProgress();
+                updateNavigationButtons();
+            } else {
+                showResult();
+            }
+        }
+
+        function answerQuestion(answer) {
+            answers[currentQuestion] = answer;
+            riskScore = answers.filter(a => a === true).length;
+            
+            updateNavigationButtons();
+            
+            // 자동으로 다음 질문으로 이동
+            setTimeout(() => {
+                if (currentQuestion < questions.length - 1) {
+                    currentQuestion++;
+                    showQuestion();
+                } else {
+                    // 마지막 질문인 경우 결과 표시
+                    showResult();
+                }
+            }, 300);
+        }
+
+        function nextQuestion() {
+            if (currentQuestion < questions.length - 1) {
+                currentQuestion++;
+                showQuestion();
+            } else if (currentQuestion === questions.length - 1) {
+                // 마지막 질문에서 결과 표시
+                showResult();
+            }
+        }
+
+        function previousQuestion() {
+            if (currentQuestion > 0) {
+                currentQuestion--;
+                showQuestion();
+            }
+        }
+
+        function showResult() {
+            document.getElementById('questionCard').style.display = 'none';
+            document.getElementById('resultContainer').style.display = 'block';
+            
+            // 최종 위험도 점수 계산 (답변하지 않은 항목은 제외)
+            const answeredQuestions = answers.filter(a => a !== undefined);
+            const yesAnswers = answers.filter(a => a === true).length;
+            riskScore = yesAnswers;
+            
+            let riskPercentage = 0;
+            if (answeredQuestions.length > 0) {
+                riskPercentage = Math.round((yesAnswers / answeredQuestions.length) * 100);
+            }
+            
+            let riskLevel, riskClass, description;
+
+            if (riskPercentage >= 60) {
+                riskLevel = "위험도: 매우 높음";
+                riskClass = "risk-high";
+                description = "⚠️ 다수의 사기 신호가 감지되었습니다. 즉시 거래를 중단하고 관련 기관에 신고하시기 바랍니다. 절대 추가 입금이나 개인정보를 제공하지 마세요.";
+            } else if (riskPercentage >= 30) {
+                riskLevel = "위험도: 높음";
+                riskClass = "risk-medium";
+                description = "⚠️ 여러 사기 신호가 감지되었습니다. 거래를 중단하고 신중하게 검토하시기 바랍니다. 가족이나 지인과 상의 후 결정하세요.";
+            } else if (riskPercentage >= 10) {
+                riskLevel = "위험도: 보통";
+                riskClass = "risk-medium";
+                description = "⚠️ 일부 의심스러운 신호가 있습니다. 추가로 확인하고 주의 깊게 거래를 진행하세요. 의심스러운 부분이 있다면 거래를 중단하세요.";
+            } else {
+                riskLevel = "위험도: 낮음";
+                riskClass = "risk-low";
+                description = "✅ 현재까지는 큰 위험 신호가 감지되지 않았습니다. 하지만 항상 주의하며 거래하시고, 이상한 점이 발견되면 즉시 거래를 중단하세요.";
+            }
+
+            document.getElementById('riskLevel').textContent = riskLevel;
+            document.getElementById('riskLevel').className = `risk-level ${riskClass}`;
+            document.getElementById('resultDescription').innerHTML = description;
+            document.getElementById('totalQuestions').textContent = `${answeredQuestions.length} (답변된 문항)`;
+            document.getElementById('riskCount').textContent = yesAnswers;
+            document.getElementById('riskScore').textContent = riskPercentage + '%';
+            
+            // 진행률을 100%로 설정
+            document.getElementById('progressFill').style.width = '100%';
+            document.getElementById('progressText').textContent = `완료!`;
+        }
+
+        function restartCheck() {
+            currentQuestion = 0;
+            answers = [];
+            riskScore = 0;
+            document.getElementById('questionCard').style.display = 'block';
+            document.getElementById('resultContainer').style.display = 'none';
+            showQuestion();
+        }
+
+        // 초기화 함수
+        function initializeApp() {
+            currentQuestion = 0;
+            answers = [];
+            riskScore = 0;
+            showQuestion();
+        }
+
+        // 페이지 로드 시 첫 번째 질문 표시
+        initializeApp();
+    </script>
+</body>
+</html>
